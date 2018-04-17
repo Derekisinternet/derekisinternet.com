@@ -1,0 +1,47 @@
+:root {
+  --purple: #982ba0;
+  --orange: #ce6904;
+  --dark-blue: #140b44;
+  
+}
+
+body {
+  background: #4748ac;/* for browsers that don't support gradients */
+  background: linear-gradient(to right, #4054a0, #0f092e);
+  color: #448D76;
+  font-family: sans-serif;
+}
+
+h1 {
+  max-width: 300px;
+  background: var(--orange);
+  background: linear-gradient(to bottom right, var(--orange), var(--purple));
+  text-align: center;
+  color: var(--dark-blue);
+  font-size: 300%;
+}
+
+p {
+  color: green;
+  display: block;
+  
+}
+
+#navigator {
+  background: #05722f;
+  background: linear-gradient(to bottom, var(--orange), var(--purple));
+}
+
+#main-content {
+  margin: auto;
+  max-width: 90%;
+  background: var(--dark-blue);
+  display: block;
+  padding: 5px;
+}
+
+#youtube-player {
+  display: block;
+  margin: auto;
+  border-color: var(--purple);
+}
