@@ -1,4 +1,4 @@
 // Select which video to play on the main player:
-function selectVideo() {
-  document.getElementById('youtube-player').src = '';
+function setVideo(link) {
+  document.getElementById('youtube-player').src = link;
 }
