@@ -46,6 +46,13 @@ ul {
   border-color: var(--orange);
 }
 
+.playlist-button {
+  background: var(--orange);
+  background: linear-gradient(to bottom, var(--orange), var(--purple));
+  color: var(--dark-blue);
+  border-color: var(--orange);
+}
+
 #youtube-player {
   display: block;
   margin: auto;
