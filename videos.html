@@ -6,11 +6,19 @@
   <body>
     <h1>Videos</h1>
     <div id="navigator"> 
-      <ul style="list-style-type:none">
+      <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="aboutme.html">About me</a></li>
       </ul>
     </div>
-    <iframe id="youtube-player" width="420" height="315" src="http://youtube.com/embed/kZmEdSaheVc"></iframe>
+    <div id="playlist">
+      <ul>
+        <li><button type='button' class= 'playlist-button' onclick="setVideo('https://www.youtube.com/embed/B_5FFltZzXc')">How to Build a Robot Pt 1</button></li>
+        <li><button type='button' class= 'playlist-button' onclick="setVideo('https://www.youtube.com/embed/a1Ma-UUmkbM')">How to Build a Robot Pt 2</button></li>
+        <li><button type='button' class= 'playlist-button' onlcick="setVideo('http://www.youtube.com/embed/kZmEdSaheVc')">How to Build a Robot Pt 3</button></li>
+      </ul>
+    </div>
+    <iframe id="youtube-player" width="560" height="315" src="http://youtube.com/embed/kZmEdSaheVc"></iframe>
   </body>
+  <script src='js/videos.js'></script>
 </html>
