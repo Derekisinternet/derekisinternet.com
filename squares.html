@@ -1,0 +1,49 @@
+ <!-- first attempt at drawing animations: squares  -->
+<style>
+  #can {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #345, #200);
+  }
+</style>
+<html>
+  <body>
+    <canvas id="can"></canvas>
+  </body>
+</html>
+<script>
+  var can = document.getElementById("can");
+  var side = 10;
+  var startx = 20;
+  var starty = 20;
+  var dx = 5;
+  var dy = 3;
+  var ds = 3;
+  var sqrs = [];
+  var sqrnum = 7;
+  
+  var id;
+  var ctx = can.getContext("2d");
+  ctx.strokeStyle = "#009900";
+
+  onload = function increment() {
+    id = requestAnimationFrame(increment);
+
+    if (sqrs.length < sqrnum) {
+      sqrs.push({x:startx, y:starty, side:10});
+    }
+    ctx.clearRect(0,0,can.width,can.height);
+
+    for (i=0; i < sqrs.length; i++) {
+      s = sqrs[i];
+      ctx.strokeRect(s.x,s.y,s.side,s.side);
+      s.x += dx;
+      s.y += dy;
+      s.side += ds;
+      if (s.x+side >= can.width || s.x+dx+s.side >= can.width || x <= 0 ) { dx = dx * -1};
+      if (s.y+side >= can.height || s.y+dy+s.side >= can.height ||  y <= 0) { dy = dy * -1};
+      if (s.side >= can.width || s.side >= can.height) { };
+    }
+  }
+</script>
