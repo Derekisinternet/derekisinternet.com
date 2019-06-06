@@ -19,7 +19,7 @@
   var starty = 20;
   var dx = 5;
   var dy = 3;
-  var ds = 3;
+  var ds = 2;
   var sqrs = [];
   var sqrnum = 7;
   
@@ -35,6 +35,7 @@
     }
     ctx.clearRect(0,0,can.width,can.height);
 
+    drop = [];
     for (i=0; i < sqrs.length; i++) {
       s = sqrs[i];
       ctx.strokeRect(s.x,s.y,s.side,s.side);
@@ -43,7 +44,14 @@
       s.side += ds;
       if (s.x+side >= can.width || s.x+dx+s.side >= can.width || x <= 0 ) { dx = dx * -1};
       if (s.y+side >= can.height || s.y+dy+s.side >= can.height ||  y <= 0) { dy = dy * -1};
-      if (s.side >= can.width || s.side >= can.height) { };
+      if (s.side >= can.width || s.side >= can.height) { drop.push(i)};
     }
+
+    pord = drop.reverse();
+    for (j = 0; j < pord.length; j++) {
+      k = pord[i];
+      sqrs.splice(k,1);
+    }
+    if (sqrs.length == 0) { cancelAnimationFrame(id) }
   }
 </script>
