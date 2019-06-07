@@ -16,12 +16,14 @@
 </html>
 <script>
   var can = document.getElementById("can");
-  var side = 10;
-  var startx = 20;
-  var starty = 20;
-  var dx = 5;
-  var dy = 3;
-  var ds = 2;
+  var ratio = can.height / can.width;
+  var startwidth = 10;
+  var startheight = (startwidth * ratio);
+  var startx = (can.width / 2) - startwidth;
+  var starty = (can.height / 2) - startheight;
+  var dx = -4;
+  var dy = -4;
+  var ds = 8;
   var sqrs = [];
   var sqrnum = 7;
   
@@ -30,30 +32,33 @@
   ctx.strokeStyle = "#009900";
 
   onload = function increment() {
+    
     id = requestAnimationFrame(increment);
 
-    if (sqrs.length < sqrnum) {
-      sqrs.push({x:startx, y:starty, side:10});
+    if (sqrs.length <= sqrnum) {
+      sqrs.push({x:startx, y:starty, height:startheight, width:startwidth});
     }
     ctx.clearRect(0,0,can.width,can.height);
 
-    drop = [];
+    drops = [];
     for (i=0; i < sqrs.length; i++) {
       s = sqrs[i];
-      ctx.strokeRect(s.x,s.y,s.side,s.side);
+      ctx.strokeRect(s.x,s.y,s.width,s.height);
       s.x += dx;
       s.y += dy;
-      s.side += ds;
-      if (s.x+side >= can.width || s.x+dx+s.side >= can.width || x <= 0 ) { dx = dx * -1};
-      if (s.y+side >= can.height || s.y+dy+s.side >= can.height ||  y <= 0) { dy = dy * -1};
-      if (s.side >= can.width || s.side >= can.height) { drop.push(i)};
+      s.width += ds;
+      s.height += ds;
+      if (s.width >= can.width) { 
+        drops.push(i); 
+        <!-- cancelAnimationFrame(id); -->
+        ctx.clearRect(0,0,can.width,can.height);
+        setTimeout(function f(){}, 2000);
+      }
     }
 
-    pord = drop.reverse();
-    for (j = 0; j < pord.length; j++) {
-      k = pord[i];
+    for (j = drops.length; j > 0; j--) {
+      k = drops[j];
       sqrs.splice(k,1);
     }
-    if (sqrs.length == 0) { cancelAnimationFrame(id) }
   }
 </script>
