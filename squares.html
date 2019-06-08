@@ -31,17 +31,8 @@
   var ctx = can.getContext("2d");
   ctx.strokeStyle = "#009900";
 
-  function arc(horiz, vertic) {
-    if (horiz != 0) { dx += horiz; }
-    if (vertic != 0 ) { dy += vertic; }
-    if (dx > window.innerWidth) { dx = 1; }
-    if ( dy > window.innerHeight) { dy = 1; }
-  }
-
   onload = function increment() {
     id = requestAnimationFrame(increment);
-
-    arc(2,4);
 
     if (sqrs.length <= sqrnum) {
       sqrs.push({x:startx, y:starty, height:startheight, width:startwidth});
@@ -52,10 +43,15 @@
     for (i=0; i < sqrs.length; i++) {
       s = sqrs[i];
       ctx.strokeRect(s.x,s.y,s.width,s.height);
-      s.x += dx;
-      s.y += dy;
-      s.width += ds;
-      s.height += ds;
+      // transform for next frame
+      wrat = s.width / window.innerWidth;
+      hrat = s.height / window.innerHeight;
+
+      s.width += s.width * wrat;
+      s.heigth += s.height * hrat;
+      s.x -= s.x * wrat;
+      s.y -= s.y * hrat;
+      
       if (s.width >= can.width) {
         drops.push(i);
         <!-- cancelAnimationFrame(id); -->
