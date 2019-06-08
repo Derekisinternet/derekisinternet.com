@@ -21,19 +21,27 @@
   var startheight = (startwidth * ratio);
   var startx = (can.width / 2) - startwidth;
   var starty = (can.height / 2) - startheight;
-  var dx = -4;
-  var dy = -4;
+  var dx = -1;
+  var dy = -1;
   var ds = 8;
   var sqrs = [];
   var sqrnum = 7;
-  
+
   var id;
   var ctx = can.getContext("2d");
   ctx.strokeStyle = "#009900";
 
+  function arc(horiz, vertic) {
+    if (horiz != 0) { dx += horiz; }
+    if (vertic != 0 ) { dy += vertic; }
+    if (dx > window.innerWidth) { dx = 1; }
+    if ( dy > window.innerHeight) { dy = 1; }
+  }
+
   onload = function increment() {
-    
     id = requestAnimationFrame(increment);
+
+    arc(2,4);
 
     if (sqrs.length <= sqrnum) {
       sqrs.push({x:startx, y:starty, height:startheight, width:startwidth});
@@ -48,11 +56,10 @@
       s.y += dy;
       s.width += ds;
       s.height += ds;
-      if (s.width >= can.width) { 
-        drops.push(i); 
+      if (s.width >= can.width) {
+        drops.push(i);
         <!-- cancelAnimationFrame(id); -->
         ctx.clearRect(0,0,can.width,can.height);
-        setTimeout(function f(){}, 2000);
       }
     }
 
