@@ -16,52 +16,73 @@
 </html>
 <script>
   var can = document.getElementById("can");
+  var ctx = can.getContext("2d");
+  ctx.strokeStyle = "#009900";
+
   var ratio = can.height / can.width;
   var startwidth = 10;
   var startheight = (startwidth * ratio);
   var startx = (can.width / 2) - startwidth;
   var starty = (can.height / 2) - startheight;
-  var dx = -1;
-  var dy = -1;
-  var ds = 8;
+  var ds = 2;
   var sqrs = [];
   var sqrnum = 7;
-
+  var fps = 10;
   var id;
-  var ctx = can.getContext("2d");
-  ctx.strokeStyle = "#009900";
-
+  
   onload = function increment() {
-    id = requestAnimationFrame(increment);
+    setTimeout( function() {
+      id = requestAnimationFrame(increment);
 
-    if (sqrs.length <= sqrnum) {
-      sqrs.push({x:startx, y:starty, height:startheight, width:startwidth});
-    }
-    ctx.clearRect(0,0,can.width,can.height);
-
-    drops = [];
-    for (i=0; i < sqrs.length; i++) {
-      s = sqrs[i];
-      ctx.strokeRect(s.x,s.y,s.width,s.height);
-      // transform for next frame
-      wrat = s.width / window.innerWidth;
-      hrat = s.height / window.innerHeight;
-
-      s.width += s.width * wrat;
-      s.heigth += s.height * hrat;
-      s.x -= s.x * wrat;
-      s.y -= s.y * hrat;
-      
-      if (s.width >= can.width) {
-        drops.push(i);
-        <!-- cancelAnimationFrame(id); -->
-        ctx.clearRect(0,0,can.width,can.height);
+      //init
+      if (!window.time) {
+        var time = 0;
+        var frame= 0;
+        var timeNextFrame = 0;
       }
-    }
+      currentTime = performance.now() / 1000;
+      while (time < currentTime) {
+        while (time < timeNextFrame) {
+          time += 1/16384;
+        }
+        frame++
+        timeNextFrame += 1/600;
 
-    for (j = drops.length; j > 0; j--) {
-      k = drops[j];
-      sqrs.splice(k,1);
-    }
+        // update viz
+
+      }
+
+      if (sqrs.length <= sqrnum) {
+        sqrs.push({x:startx, y:starty, height:startheight, width:startwidth, delta:ds});
+      }
+      ctx.clearRect(0,0,can.width,can.height);
+
+      drops = [];
+      for (i=0; i < sqrs.length; i++) {
+        s = sqrs[i];
+        ctx.strokeRect(s.x,s.y,s.width,s.height);
+
+        // transform for next frame
+        s.width += s.delta;
+        s.height += s.delta * ratio;
+        wrat = s.width / window.innerWidth;
+        hrat = s.height / window.innerHeight;
+
+        s.x -= s.x * wrat;
+        s.y -= s.y * hrat;
+        s.delta += (1 + (wrat + hrat) / 2);
+        
+        if (s.width >= can.width) {
+          drops.push(i);
+          <!-- cancelAnimationFrame(id); -->
+          ctx.clearRect(0,0,can.width,can.height);
+        }
+      }
+
+      for (j = drops.length; j > 0; j--) {
+        k = drops[j];
+        sqrs.splice(k,1);
+      }
+    }, 1000/fps)
   }
 </script>
