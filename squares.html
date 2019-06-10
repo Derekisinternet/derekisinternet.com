@@ -22,7 +22,7 @@
   ctx.strokeStyle = "#009900";
 
   var ratio = can.height / can.width;
-  var startwidth = 10;
+  var startwidth = 70;
   var startheight = (startwidth * ratio);
   var startx = (can.width / 2) - startwidth - 10;
   var starty = (can.height / 2) - startheight + 90;
@@ -33,7 +33,6 @@
   var id;
 
   function shift(val, rat) {
-    if (val < 1) { val += 1}
     return val * rat;
   }
   
@@ -77,12 +76,11 @@
 
         s.x -= shift(s.x, wrat);
         s.y -= shift(s.y, hrat);
-        s.delta += (1 + (wrat + hrat) / 2);
+        s.delta += (1 + wrat)^2;
         
         <!-- if (s.x < 1) { cancelAnimationFrame(id); } -->
         if (s.width >= window.innerWidth || s.height >= window.innerHeight) {
           drops.push(i);
-          <!-- cancelAnimationFrame(id); -->
         }
       }
 
