@@ -16,19 +16,26 @@
 </html>
 <script>
   var can = document.getElementById("can");
+  can.height = window.innerHeight;
+  can.width = window.innerWidth;
   var ctx = can.getContext("2d");
   ctx.strokeStyle = "#009900";
 
   var ratio = can.height / can.width;
   var startwidth = 10;
   var startheight = (startwidth * ratio);
-  var startx = (can.width / 2) - startwidth;
-  var starty = (can.height / 2) - startheight;
-  var ds = 2;
+  var startx = (can.width / 2) - startwidth - 10;
+  var starty = (can.height / 2) - startheight + 90;
+  var ds = 9;
   var sqrs = [];
   var sqrnum = 7;
-  var fps = 10;
+  var fps = 15;
   var id;
+
+  function shift(val, rat) {
+    if (val < 1) { val += 1}
+    return val * rat;
+  }
   
   onload = function increment() {
     setTimeout( function() {
@@ -68,14 +75,14 @@
         wrat = s.width / window.innerWidth;
         hrat = s.height / window.innerHeight;
 
-        s.x -= s.x * wrat;
-        s.y -= s.y * hrat;
+        s.x -= shift(s.x, wrat);
+        s.y -= shift(s.y, hrat);
         s.delta += (1 + (wrat + hrat) / 2);
         
-        if (s.width >= can.width) {
+        <!-- if (s.x < 1) { cancelAnimationFrame(id); } -->
+        if (s.width >= window.innerWidth || s.height >= window.innerHeight) {
           drops.push(i);
           <!-- cancelAnimationFrame(id); -->
-          ctx.clearRect(0,0,can.width,can.height);
         }
       }
 
