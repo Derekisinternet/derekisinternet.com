@@ -1,0 +1,29 @@
+<html>
+  <style>
+    #c {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, #345, #200);
+    }
+  </style>
+  <body>
+    <canvas id="c"></canvas>
+  </body>
+  <script>
+    var can = document.getElementById("c");
+    can.width = window.innerWidth;
+    can.height = window.innerHeight;
+    var ctx = can.getContext("2d");
+    ctx.fillStyle = ctx.createRadialGradient(circle, #350, );
+
+    var planetX = can.width/2;
+    var planetY = can.height*3;
+    var planetR = can.width*1.2;
+    ctx.beginPath();
+    ctx.arc(planetX, planetY, planetR, 0, Math.PI, true);
+    ctx.fill();
+  </script>
+</html>
