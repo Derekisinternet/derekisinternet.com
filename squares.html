@@ -48,8 +48,8 @@
       ctx.clearRect(0,0,can.width,can.height);
 
       // draw planet
-      var planetX = can.width/2;
-      var planetY = can.height*5/2;
+      var planetX = Math.floor(can.width/2);
+      var planetY = Math.floor(can.height*5/2);
       var planetR = can.width;
 
       var grad = ctx.createRadialGradient(planetX, planetY, planetR-20, planetX, planetY, planetR);
@@ -60,9 +60,14 @@
       ctx.fill();
 
       dropS = false;
+      // render squares on another canvas to avoid redrawing everything on every update:
+      var jCanvas = document.createElement("canvas");
+      jCanvas.width = can.width;
+      jCanvas.height = can.height;
+      var jContext = jCanvas.getContext("2d");
       for (i=0; i < sqrs.length; i++) {
         s = sqrs[i];
-        ctx.strokeRect(s.x,s.y,s.width,s.height);
+        jContext.strokeRect(s.x,s.y,s.width,s.height);
 
         // transform for next frame
         s.width += s.delta;
@@ -80,12 +85,13 @@
           dropS = true;
         }
       }
-
+      ctx.drawImage(jCanvas, 0, 0);
       // remove large rectangle. It's going to be the 0th array element, because it's the oldest
       if (dropS) {
         sqrs.shift();
         dropS = false;
       }
+
     }, 1000/fps)
   }
 </script>
