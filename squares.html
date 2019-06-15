@@ -62,8 +62,8 @@
 
       // draw planet
       var planetX = can.width/2;
-      var planetY = can.height*2.5;
-      var planetR = can.width*2/3;
+      var planetY = can.height*5/2;
+      var planetR = can.width;
 
       var grad = ctx.createRadialGradient(planetX, planetY, planetR-20, planetX, planetY, planetR);
       grad.addColorStop(0, "black");
@@ -72,7 +72,7 @@
       ctx.arc(planetX, planetY, planetR, 0, Math.PI, true);
       ctx.fill();
 
-      drops = [];
+      dropS = false;
       for (i=0; i < sqrs.length; i++) {
         s = sqrs[i];
         ctx.strokeRect(s.x,s.y,s.width,s.height);
@@ -87,16 +87,18 @@
         s.y -= shift(s.y, hrat);
         s.delta += (1 + wrat)^2;
         
-        <!-- if (s.x < 1) { cancelAnimationFrame(id); } -->
+        
         if (s.width >= window.innerWidth || s.height >= window.innerHeight) {
-          drops.push(i);
+          <!-- cancelAnimationFrame(id); -->
+          dropS = true;
+          console.log(`need to drop`);
         }
       }
 
-      // remove large rectangles
-      for (j = drops.length; j > 0; j--) {
-        k = drops[j];
-        sqrs.splice(k,1);
+      // remove large rectangle. It's going to be the 0th array element, because it's the oldest
+      if (dropS) {
+        sqrs.shift();
+        dropS = false;
       }
     }, 1000/fps)
   }
