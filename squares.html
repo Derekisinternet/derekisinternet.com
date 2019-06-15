@@ -53,15 +53,24 @@
         }
         frame++
         timeNextFrame += 1/600;
-
-        // update viz
-
       }
 
       if (sqrs.length <= sqrnum) {
         sqrs.push({x:startx, y:starty, height:startheight, width:startwidth, delta:ds});
       }
       ctx.clearRect(0,0,can.width,can.height);
+
+      // draw planet
+      var planetX = can.width/2;
+      var planetY = can.height*2.5;
+      var planetR = can.width*2/3;
+
+      var grad = ctx.createRadialGradient(planetX, planetY, planetR-20, planetX, planetY, planetR);
+      grad.addColorStop(0, "black");
+      grad.addColorStop(1, "red");
+      ctx.fillStyle = grad;
+      ctx.arc(planetX, planetY, planetR, 0, Math.PI, true);
+      ctx.fill();
 
       drops = [];
       for (i=0; i < sqrs.length; i++) {
@@ -84,6 +93,7 @@
         }
       }
 
+      // remove large rectangles
       for (j = drops.length; j > 0; j--) {
         k = drops[j];
         sqrs.splice(k,1);
