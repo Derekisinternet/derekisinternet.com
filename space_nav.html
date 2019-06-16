@@ -19,7 +19,7 @@
   can.height = window.innerHeight;
   can.width = window.innerWidth;
   var ctx = can.getContext("2d");
-
+  // rectangle vars
   var ratio = can.height / can.width;
   var startwidth = 70;
   var startheight = Math.floor(startwidth * ratio);
@@ -30,6 +30,12 @@
   var sqrnum = 7;
   var fps = 15;
   var id;
+  // planet vars
+  var planetR = can.width *3;
+  var planetX = Math.floor(can.width/2);
+  var planetY = planetR + can.height;
+  var planetIter = 0;
+  var planetIterCount = 20;
 
   function shift(val, rat) {
     return Math.floor(val * rat);
@@ -44,11 +50,8 @@
       }
       ctx.clearRect(0,0,can.width,can.height);
 
-      // draw planet
-      var planetR = can.width *3;
-      var planetX = Math.floor(can.width/2);
-      var planetY = planetR + Math.floor(can.height * 4 / 5);
 
+      // draw planet
       var grad = ctx.createRadialGradient(planetX, planetY, planetR-20, planetX, planetY, planetR);
       grad.addColorStop(0, "black");
       grad.addColorStop(1, "red");
@@ -72,11 +75,20 @@
         s.height += s.delta * ratio;
         wrat = s.width / window.innerWidth;
         hrat = s.height / window.innerHeight;
-
         s.x -= shift(s.x, wrat);
         s.y -= shift(s.y, hrat);
         s.delta += (1 + wrat)^2;
-        
+
+        // only move planet after so many cycles
+        planetIter++;
+        if (planetIter == planetIterCount) {
+          planetY -=1;
+          planetIter = 0;
+          if ((planetY - planetR) <= (can.height*3/4)) {
+            cancelAnimationFrame(id);
+          }
+        }
+
         if (s.width >= window.innerWidth || s.height >= window.innerHeight) {
           <!-- cancelAnimationFrame(id); -->
           dropS = true;
