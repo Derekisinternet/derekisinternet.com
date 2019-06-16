@@ -39,8 +39,6 @@
     setTimeout( function() {
       id = requestAnimationFrame(increment);
 
-      
-
       if (sqrs.length <= sqrnum) {
         sqrs.push({x:startx, y:starty, height:startheight, width:startwidth, delta:ds});
       }
@@ -78,7 +76,6 @@
         s.x -= shift(s.x, wrat);
         s.y -= shift(s.y, hrat);
         s.delta += (1 + wrat)^2;
-        
         
         if (s.width >= window.innerWidth || s.height >= window.innerHeight) {
           <!-- cancelAnimationFrame(id); -->

@@ -3,8 +3,8 @@
 - [x] move squares in an arc
 - [x] slow down animation
 - [x] update background
-- [ ] optimize animation for cpu
-- [ ] Slowly bring the planet in frame
-- slowly move the color gradient to create dawn
+- [x] optimize animation for cpu
+- [ ] Slowly bring the planet into frame
+- [ ] slowly move the planet's color gradient to create dawn
 - [ ] once the planet comes into 1/3 of the frame, rotate the rectangles, and move the planet across frame, giving hte impression of a roll.
 - [ ] end the animation by having the ship achieve escape velocity
