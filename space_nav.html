@@ -60,12 +60,13 @@
       ctx.fill();
 
       dropS = false;
-      // render squares on another canvas to avoid redrawing everything on every update:
+      // render rectangles on another canvas to avoid redrawing everything on every update:
       var sCanvas = document.createElement("canvas");
       sCanvas.width = can.width;
       sCanvas.height = can.height;
       var sContext = sCanvas.getContext("2d");
       sContext.strokeStyle = "#009900";
+      // draw rectangles
       for (i=0; i < sqrs.length; i++) {
         s = sqrs[i];
         sContext.strokeRect(s.x,s.y,s.width,s.height);
@@ -75,7 +76,7 @@
         s.height += s.delta * ratio;
         wrat = s.width / window.innerWidth;
         hrat = s.height / window.innerHeight;
-        s.x -= shift(s.x, wrat);
+        s.x -= Math.floor(s.delta/2);
         s.y -= shift(s.y, hrat);
         s.delta += (1 + wrat)^2;
 
