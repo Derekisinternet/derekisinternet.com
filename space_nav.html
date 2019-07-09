@@ -77,7 +77,7 @@
         wrat = s.width / window.innerWidth;
         hrat = s.height / window.innerHeight;
         s.x -= Math.floor(s.delta/2);
-        s.y -= Math.floor((s.y * hrat)/ 2);
+        s.y -= (Math.floor(s.y * hrat)/ 3);
         s.delta += 1 + ((1 + wrat)^2);
 
         // only move planet after so many cycles
