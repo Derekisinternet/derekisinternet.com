@@ -24,7 +24,7 @@
   var startwidth = 70;
   var startheight = Math.floor(startwidth * ratio);
   var startx = Math.floor(can.width / 2) - startwidth - 10;
-  var starty = Math.floor(can.height / 2) - startheight + 90;
+  var starty = (can.height * 3)/4 - startheight;
   var ds = 9;
   var sqrs = [];
   var sqrnum = 7;
@@ -77,8 +77,8 @@
         wrat = s.width / window.innerWidth;
         hrat = s.height / window.innerHeight;
         s.x -= Math.floor(s.delta/2);
-        s.y -= shift(s.y, hrat);
-        s.delta += (1 + wrat)^2;
+        s.y -= Math.floor((s.y * hrat)/ 2);
+        s.delta += 1 + ((1 + wrat)^2);
 
         // only move planet after so many cycles
         planetIter++;
