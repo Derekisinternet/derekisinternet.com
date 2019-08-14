@@ -1,22 +1,22 @@
-var vertexShaderText = 
+var vertexShaderText =
 [
   'precision mediump float;',
   '',
-  'attribute vec2 vertPosition;',
+  'attribute vec3 vertPosition;',
   'attribute vec3 vertColor;',
   'varying vec3 fragColor;',
-  'uniform mat4 matrix worldMat',
-  'uniform mat4 viewMat',
-  'uniform mat4 matrix ProjectorMat',
+  'uniform mat4 worldMat;',
+  'uniform mat4 viewMat;',
+  'uniform mat4 projectorMat;',
   '',
   'void main()',
   '{',
   '  fragColor = vertColor;',
-  '  gl_Position = vec4(vertPosition, 0.0, 1.0);',
+  '  gl_Position = projectorMat * viewMat * worldMat * vec4(vertPosition, 0.0, 1.0);',
   '}'
 ].join('\n');
 
-var fragmentShaderText = 
+var fragmentShaderText =
 [
   'precision mediump float;',
   '',
@@ -77,11 +77,11 @@ var InitDemo = function () {
   }
 
   // create buffer
-  var triangelVertices = 
-  [// x, y         R, G, B
-    0.0, 0.5,     1.0, 0.9, 0.0,
-    -0.5, -0.5,   0.7, 0.0, 1.0,
-    0.5, -0.5,     0.1, 1.0, 0.6
+  var triangelVertices =
+  [// x, y, z         R, G, B
+    0.0, 0.5, 0.0,     1.0, 0.9, 0.0,
+    -0.5, -0.5, 0.0,   0.7, 0.0, 1.0,
+    0.5, -0.5, 0.0,     0.1, 1.0, 0.6
   ];
 
   var triangleVertexBuffer = gl.createBuffer();
@@ -92,10 +92,10 @@ var InitDemo = function () {
   var colorAttrribLocation = gl.getAttribLocation(program, 'vertColor');
   gl.vertexAttribPointer(
     positionAttrribLocation, // atribue location
-    2, // number of elements per attribute
+    3, // number of elements per attribute
     gl.FLOAT, // type of elements
     gl.FALSE,
-    5 * Float32Array.BYTES_PER_ELEMENT, // size of an individual vertex
+    6 * Float32Array.BYTES_PER_ELEMENT, // size of an individual vertex
     0 // offset from the beginning of a single vertext to this attribute
   );
   gl.vertexAttribPointer(
@@ -103,12 +103,32 @@ var InitDemo = function () {
     3, // number of elements per attribute
     gl.FLOAT, // type of elements
     gl.FALSE,
-    5 * Float32Array.BYTES_PER_ELEMENT, // size of an individual vertex
-    2 * Float32Array.BYTES_PER_ELEMENT// offset from the beginning of a single vertext to this attribute
+    6 * Float32Array.BYTES_PER_ELEMENT, // size of an individual vertex
+    3 * Float32Array.BYTES_PER_ELEMENT// offset from the beginning of a single vertext to this attribute
   );
 
   gl.enableVertexAttribArray(positionAttrribLocation);
   gl.enableVertexAttribArray(colorAttrribLocation);
+
+  // tell gl state machine which program to use
+gl.useProgram(program);
+
+  // matrix locations in GPU
+  var matWorldUniformLocation = gl.getUniformLocation(program, 'worldMat');
+  var matViewUniformLocation = gl.getUniformLocation(program, 'viewMat');
+  var matProjectorUniformLocation = gl.getUniformLocation(program, 'projectorMat');
+
+  // matrices constructed in CPU/ RAM
+  var worldMatrix = new Float32Array(16);
+  var viewMatrix = new Float32Array(16);
+  var projMatrix = new Float32Array(16);
+  mat4.identity(worldMatrix);
+  mat4.identity(viewMatrix);
+  mat4.identity(projMatrix);
+
+  gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+  gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
+  gl.uniformMatrix4fv(matProjectorUniformLocation, gl.FALSE, projMatrix);
 
   // main render loop
   gl.useProgram(program);
