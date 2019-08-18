@@ -12,7 +12,7 @@ var vertexShaderText =
   'void main()',
   '{',
   '  fragColor = vertColor;',
-  '  gl_Position = projectorMat * viewMat * worldMat * vec4(vertPosition, 0.0, 1.0);',
+  '  gl_Position = projectorMat * viewMat * worldMat * vec4(vertPosition, 1.0);',
   '}'
 ].join('\n');
 
