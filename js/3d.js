@@ -41,7 +41,7 @@ var InitDemo = function () {
   alert("Your browser does not support webgl >:(");
   }
 
-  gl.clearColor(0.75, 0.85, 0.8, 1.0);
+  gl.clearColor(0.90, 0.90, 0.08, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   //dont draw pixel if it's behind something already drawn
   gl.enable(gl.DEPTH_TEST);
