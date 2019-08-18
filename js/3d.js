@@ -43,6 +43,12 @@ var InitDemo = function () {
 
   gl.clearColor(0.75, 0.85, 0.8, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  //dont draw pixel if it's behind something already drawn
+  gl.enable(gl.DEPTH_TEST);
+  //enable back face culling
+  gl.enable(gl.CULL_FACE);
+  gl.frontFace(gl.CCW);
+  gl.cullFace(gl.BACK);
 
   var vertexShader = gl.createShader(gl.VERTEX_SHADER);
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -77,16 +83,79 @@ var InitDemo = function () {
   }
 
   // create buffer
-  var triangelVertices =
+  var boxVertices =
   [// x, y, z         R, G, B
-    0.0, 0.5, 0.0,     1.0, 0.9, 0.0,
-    -0.5, -0.5, 0.0,   0.7, 0.0, 1.0,
-    0.5, -0.5, 0.0,     0.1, 1.0, 0.6
+   // Top
+   -1.0, 1.0, -1.0,   0.5, 0.5, 0.5,
+   -1.0, 1.0, 1.0,    0.5, 0.5, 0.5,
+   1.0, 1.0, 1.0,     0.5, 0.5, 0.5,
+   1.0, 1.0, -1.0,    0.5, 0.5, 0.5,
+
+   // Left
+   -1.0, 1.0, 1.0,   0.75, 0.75, 0.75,
+   -1.0, -1.0, 1.0,   0.75, 0.75, 0.75,
+   -1.0, -1.0, -1.0,   0.75, 0.75, 0.75,
+   -1.0, 1.0, -1.0,   0.75, 0.75, 0.75,
+ 
+ 
+  // Right
+  1.0, 1.0, 1.0,     0.25,0.25,0.25,
+  1.0, -1.0, 1.0,     0.25,0.25,0.25,
+  1.0, -1.0, -1.0,     0.25,0.25,0.25,
+  1.0, 1.0, -1.0,     0.25,0.25,0.25,
+ 
+  // Front
+  1.0,1.0,1.0,       1.0, 0.0, 0.15,
+  1.0,-1.0,1.0,       1.0, 0.0, 0.15,
+  -1.0,-1.0,1.0,       1.0, 0.0, 0.15,
+  -1.0,1.0,1.0,       1.0, 0.0, 0.15,
+ 
+  // Back
+  1.0,1.0,-1.0,       0.0,1.0,0.15,
+  1.0,-1.0,-1.0,       0.0,1.0,0.15,
+  -1.0,-1.0,-1.0,       0.0,1.0,0.15,
+  -1.0,1.0,-1.0,       0.0,1.0,0.15,
+
+  // Bottom
+  -1.0,-1.0,-1.0,       0.5,0.5,1.0,
+  -1.0,-1.0,1.0,       0.5,0.5,1.0,
+  1.0,-1.0,1.0,       0.5,0.5,1.0,
+  1.0,-1.0,-1.0,       0.5,0.5,1.0,
   ];
 
-  var triangleVertexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangelVertices), gl.STATIC_DRAW);
+  boxIndices = [
+    // Top
+    0,1,2,
+    0,2,3,
+
+    //Left
+    5,4,6,
+    6,4,7,
+
+    // Right
+    8,9,10,
+    8,10,11,
+
+    // Front
+    13,12,14,
+    15,14,12,
+
+    // Back
+    16,17,18,
+    16,18,19,
+
+    // Bottom
+    21,20,22,
+    22,20,23
+  ];
+
+  var boxVertxexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, boxVertxexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
+
+  var boxIndexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boxIndexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
 
   var positionAttrribLocation = gl.getAttribLocation(program, 'vertPosition');
   var colorAttrribLocation = gl.getAttribLocation(program, 'vertColor');
@@ -122,15 +191,36 @@ gl.useProgram(program);
   var worldMatrix = new Float32Array(16);
   var viewMatrix = new Float32Array(16);
   var projMatrix = new Float32Array(16);
-  mat4.identity(worldMatrix);
-  mat4.identity(viewMatrix);
-  mat4.identity(projMatrix);
 
+  
+  glMatrix.mat4.identity(worldMatrix);
+  // set camera
+  glMatrix.mat4.lookAt(viewMatrix, [0,0,-10], [0,0,0], [0,1,0]);
+  glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.width / canvas.clientHeight, 0.1, 1000.0);
+
+  // send matrices to shader
   gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
   gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
   gl.uniformMatrix4fv(matProjectorUniformLocation, gl.FALSE, projMatrix);
 
   // main render loop
-  gl.useProgram(program);
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  var identityMatrix = new Float32Array(16);
+  glMatrix.mat4.identity(identityMatrix);
+  var angle = 0;
+  var spr = 6; // seconds per revolution
+  var loop = function () {
+    // one rotation every 6 seconds
+    angle = performance.now() / 1000 / spr * 2 * Math.PI;
+    glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0, 1, 0]);
+    // update world matrix
+    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+    //clean up the previous frame
+    gl.clearColor(0.75, 0.85, 0.8, 1.0);
+    gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+    gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
+
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+  
 };
