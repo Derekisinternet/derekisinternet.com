@@ -86,23 +86,23 @@ var InitDemo = function () {
   var boxVertices =
   [// x, y, z         R, G, B
    // Top
-   -1.0, 1.0, -1.0,   0.5, 0.5, 0.5,
-   -1.0, 1.0, 1.0,    0.5, 0.5, 0.5,
-   1.0, 1.0, 1.0,     0.5, 0.5, 0.5,
-   1.0, 1.0, -1.0,    0.5, 0.5, 0.5,
+   -1.0, 1.0, -1.0,   0.5, 0.25, 0.5,
+   -1.0, 1.0, 1.0,    0.5, 0.25, 0.5,
+   1.0, 1.0, 1.0,     0.5, 0.25, 0.5,
+   1.0, 1.0, -1.0,    0.5, 0.25, 0.5,
 
    // Left
-   -1.0, 1.0, 1.0,   0.75, 0.75, 0.75,
-   -1.0, -1.0, 1.0,   0.75, 0.75, 0.75,
-   -1.0, -1.0, -1.0,   0.75, 0.75, 0.75,
-   -1.0, 1.0, -1.0,   0.75, 0.75, 0.75,
+   -1.0, 1.0, 1.0,   0.75, 0.5, 0.75,
+   -1.0, -1.0, 1.0,   0.75, 0.5, 0.75,
+   -1.0, -1.0, -1.0,   0.75, 0.5, 0.75,
+   -1.0, 1.0, -1.0,   0.75, 0.5, 0.75,
  
  
   // Right
-  1.0, 1.0, 1.0,     0.25,0.25,0.25,
-  1.0, -1.0, 1.0,     0.25,0.25,0.25,
-  1.0, -1.0, -1.0,     0.25,0.25,0.25,
-  1.0, 1.0, -1.0,     0.25,0.25,0.25,
+  1.0, 1.0, 1.0,     0.25,0.25,0.75,
+  1.0, -1.0, 1.0,     0.25,0.25,0.75,
+  1.0, -1.0, -1.0,     0.25,0.25,0.75,
+  1.0, 1.0, -1.0,     0.25,0.25,0.75,
  
   // Front
   1.0,1.0,1.0,       1.0, 0.0, 0.15,
@@ -203,6 +203,9 @@ gl.useProgram(program);
   gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
   gl.uniformMatrix4fv(matProjectorUniformLocation, gl.FALSE, projMatrix);
 
+  var xRotationMatrix = new Float32Array(16);
+  var yRotationMatrix = new Float32Array(16);
+
   // main render loop
   var identityMatrix = new Float32Array(16);
   glMatrix.mat4.identity(identityMatrix);
@@ -211,7 +214,9 @@ gl.useProgram(program);
   var loop = function () {
     // one rotation every 6 seconds
     angle = performance.now() / 1000 / spr * 2 * Math.PI;
-    glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0, 1, 0]);
+    glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
+    glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle/2, [1, 0, 0]);
+    glMatrix.mat4.mul(worldMatrix, xRotationMatrix, yRotationMatrix);
     // update world matrix
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
     //clean up the previous frame
