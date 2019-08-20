@@ -35,8 +35,6 @@ h1 {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
-<<<<<<< HEAD
-=======
   color: var(--orange3);
   font-size: 300%;
 }
@@ -45,7 +43,6 @@ p {
   color: var(--orange);
   display: block;
   
->>>>>>> style update
 }
 
 ul {
@@ -64,6 +61,7 @@ ul {
 }
 
 #navigator {
+<<<<<<< HEAD
   background: var(--orange1);
   background: linear-gradient(to bottom, var(--orange1), var(--purple1));
   list-style: none;
@@ -73,6 +71,10 @@ ul {
 #navigator a {
   display: block;
   text-decoration: none;
+=======
+  background: var(--orange);
+  background: linear-gradient(to bottom, var(--orange), var(--purple));
+>>>>>>> fixed tyop
 }
 
 #youtube-player {
@@ -82,6 +84,7 @@ ul {
   max-width: 100%;
 }
 
+<<<<<<< HEAD
 .content-index {
   background: var(--purple3);
   color: var(--orange1);
@@ -93,4 +96,11 @@ ul {
   background: linear-gradient(to bottom, var(--orange1), var(--purple1));
   color: var(--dark-blue);
   border-color: var(--orange1);
+=======
+.playlist-button {
+  background: var(--orange);
+  background: linear-gradient(to bottom, var(--orange), var(--purple));
+  color: var(--dark-blue);
+  border-color: var(--orange);
+>>>>>>> fixed tyop
 }
