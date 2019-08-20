@@ -3,7 +3,10 @@
   --purple2: #551259;
   --purple3: #3d0c3f;
   --orange1: #ce6904;
+<<<<<<< HEAD
   --orange2: #9a4f00;
+=======
+>>>>>>> cube colors
   --orange3: #211100;
   --dark-blue: #15092e;
   --teal1: #448D76;
@@ -40,7 +43,7 @@ h1 {
 }
 
 p {
-  color: var(--orange);
+  color: var(--orange1);
   display: block;
   
 }
@@ -56,6 +59,7 @@ ul {
   display: block;
   padding: 10px;
   border-style: none solid none none;
+<<<<<<< HEAD
   border-color: var(--orange2);
 
 }
@@ -75,6 +79,14 @@ ul {
   background: var(--orange);
   background: linear-gradient(to bottom, var(--orange), var(--purple));
 >>>>>>> fixed tyop
+=======
+  border-color: var(--orange1);
+}
+
+#navigator {
+  background: var(--orange1);
+  background: linear-gradient(to bottom, var(--orange1), var(--purple1));
+>>>>>>> cube colors
 }
 
 #youtube-player {
@@ -85,22 +97,32 @@ ul {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cube colors
 .content-index {
   background: var(--purple3);
   color: var(--orange1);
 }
 
 
+<<<<<<< HEAD
 .playlist-button {
   background: var(--orange1);
   background: linear-gradient(to bottom, var(--orange1), var(--purple1));
   color: var(--dark-blue);
   border-color: var(--orange1);
 =======
+=======
+>>>>>>> cube colors
 .playlist-button {
-  background: var(--orange);
-  background: linear-gradient(to bottom, var(--orange), var(--purple));
+  background: var(--orange1);
+  background: linear-gradient(to bottom, var(--orange1), var(--purple1));
   color: var(--dark-blue);
+<<<<<<< HEAD
   border-color: var(--orange);
 >>>>>>> fixed tyop
+=======
+  border-color: var(--orange1);
+>>>>>>> cube colors
 }
