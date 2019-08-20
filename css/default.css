@@ -3,10 +3,7 @@
   --purple2: #551259;
   --purple3: #3d0c3f;
   --orange1: #ce6904;
-<<<<<<< HEAD
   --orange2: #9a4f00;
-=======
->>>>>>> cube colors
   --orange3: #211100;
   --dark-blue: #15092e;
   --teal1: #448D76;
@@ -45,7 +42,7 @@ h1 {
 p {
   color: var(--orange1);
   display: block;
-  
+
 }
 
 ul {
@@ -59,13 +56,10 @@ ul {
   display: block;
   padding: 10px;
   border-style: none solid none none;
-<<<<<<< HEAD
   border-color: var(--orange2);
-
 }
 
 #navigator {
-<<<<<<< HEAD
   background: var(--orange1);
   background: linear-gradient(to bottom, var(--orange1), var(--purple1));
   list-style: none;
@@ -75,11 +69,8 @@ ul {
 #navigator a {
   display: block;
   text-decoration: none;
-=======
   background: var(--orange);
   background: linear-gradient(to bottom, var(--orange), var(--purple));
->>>>>>> fixed tyop
-=======
   border-color: var(--orange1);
 }
 
