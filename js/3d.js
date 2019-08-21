@@ -29,6 +29,8 @@ var fragmentShaderText =
 
 var InitDemo = function () {
   var canvas = document.getElementById("can");
+  if (canvas.width > window.innerWidth) {canvas.width = window.innerWidth;}
+
   var gl = canvas.getContext('webgl');
 
   if (!gl) {
