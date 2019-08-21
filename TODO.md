@@ -4,6 +4,8 @@
 
 - [ ] Decide on three-color scheme
 - [ ] Determine layout for home page
+- [ ] Determine dimensions for navigator
+- [ ] Make navigator responsive
 
 ## About Me
 

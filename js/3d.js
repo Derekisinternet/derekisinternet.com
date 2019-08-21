@@ -28,7 +28,6 @@ var fragmentShaderText =
 ].join('\n');
 
 var InitDemo = function () {
-  console.log('This thing on?')
   var canvas = document.getElementById("can");
   var gl = canvas.getContext('webgl');
 
@@ -85,7 +84,7 @@ var InitDemo = function () {
   // create buffer
   var boxVertices =
   [// x, y, z         R, G, B
-   // Top   
+   // Top
    -1.0, 1.0, -1.0,   0.0,1.0,0.15,
    -1.0, 1.0, 1.0,    0.0,1.0,0.15,
    1.0, 1.0, 1.0,     0.0,1.0,0.15,
@@ -96,21 +95,21 @@ var InitDemo = function () {
    -1.0, -1.0, 1.0,   0.25, 0.75, 0.5,
    -1.0, -1.0, -1.0,   0.25, 0.75, 0.5,
    -1.0, 1.0, -1.0,   0.25, 0.75, 0.5,
- 
- 
+
+
   // Right //////
   1.0, 1.0, 1.0,     1.0, 0.0, 0.15,
   1.0, -1.0, 1.0,     1.0, 0.0, 0.15,
   1.0, -1.0, -1.0,     1.0, 0.0, 0.15,
   1.0, 1.0, -1.0,     1.0, 0.0, 0.15,
- 
+
   // Front
   1.0,1.0,1.0,       0.75, 0.25, 0.25,
   1.0,-1.0,1.0,       0.75, 0.25, 0.25,
   -1.0,-1.0,1.0,       0.75, 0.25, 0.25,
   -1.0,1.0,1.0,       0.75, 0.25, 0.25,
- 
-  // Back 
+
+  // Back
   1.0,1.0,-1.0,       0.25,0.25,0.75,
   1.0,-1.0,-1.0,       0.25,0.25,0.75,
   -1.0,-1.0,-1.0,       0.25,0.25,0.75,
@@ -192,7 +191,7 @@ gl.useProgram(program);
   var viewMatrix = new Float32Array(16);
   var projMatrix = new Float32Array(16);
 
-  
+
   glMatrix.mat4.identity(worldMatrix);
   // set camera
   glMatrix.mat4.lookAt(viewMatrix, [0,0,-10], [0,0,0], [0,1,0]);
@@ -227,5 +226,5 @@ gl.useProgram(program);
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
-  
+
 };
