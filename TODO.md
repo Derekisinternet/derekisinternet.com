@@ -2,15 +2,15 @@
 
 ## Style
 
-- [ ] Decide on three-color scheme
+- [x] Decide on three-color scheme
 - [ ] Determine layout for home page
 - [ ] Determine dimensions for navigator
 - [ ] Make navigator responsive
 
 ## About Me
 
-- [ ] link to github
-- [ ] flesh out description
+- [x] link to github
+- [x] flesh out description
 
 ## Demos
 
