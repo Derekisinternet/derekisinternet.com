@@ -27,6 +27,17 @@ var fragmentShaderText =
   '}'
 ].join('\n');
 
+// for keybindings
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+
+// translates key names into input numbers
+var keyCodeTranslator = {
+  left: 37, up: 38, right: 39, down: 40
+}
+
 var InitDemo = function () {
   var canvas = document.getElementById("can");
   if (canvas.width > window.innerWidth) {canvas.width = window.innerWidth;}
@@ -181,7 +192,7 @@ var InitDemo = function () {
   gl.enableVertexAttribArray(colorAttrribLocation);
 
   // tell gl state machine which program to use
-gl.useProgram(program);
+  gl.useProgram(program);
 
   // matrix locations in GPU
   var matWorldUniformLocation = gl.getUniformLocation(program, 'worldMat');
@@ -207,6 +218,10 @@ gl.useProgram(program);
   var xRotationMatrix = new Float32Array(16);
   var yRotationMatrix = new Float32Array(16);
 
+  // set up keyboard inputs
+  document.addEventListener('keydown', keyDownHandler, false);
+  document.addEventListener('keyup', keyUpHandler, false);
+
   // main render loop
   var identityMatrix = new Float32Array(16);
   glMatrix.mat4.identity(identityMatrix);
@@ -229,4 +244,34 @@ gl.useProgram(program);
   };
   requestAnimationFrame(loop);
 
+};
+
+function keyDownHandler(event) {
+  if(event.keyCode == 39) {
+    rightPressed = true;
+  }
+  else if(event.keyCode == 37) {
+    leftPressed = true;
+  }
+  if(event.keyCode == 40) {
+    downPressed = true;
+  }
+  else if(event.keyCode == 38) {
+    upPressed = true;
+  }
+};
+
+function keyUpHandler(event) {
+  if(event.keyCode == keyCodeTranslator.right) {
+    rightPressed = false;
+  }
+  else if(event.keyCode == keyCodeTranslator.left) {
+    leftPressed = false;
+  }
+  if(event.keyCode == keyCodeTranslator.down) {
+    downPressed = false;
+  }
+  else if(event.keyCode == keyCodeTranslator.up) {
+    upPressed = false;
+  }
 };
