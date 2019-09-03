@@ -235,12 +235,17 @@ var InitDemo = function () {
   // expects two Float32Array(16) and a canvas
   function ApplySpin(iMatrix, wMatrix, canvas) {
     var spr = 6; // seconds per revolution
-    var angle = 0;
+    var xAngle = xAxisSpeed * 2 * Math.log.PI;
+    var yAngle = yAxisSpeed * 2 * Math.log.PI;
     var gl = canvas.getContext("webgl");
-    // one rotation every 6 seconds
-    angle = performance.now() / 1000 / spr * 2 * Math.PI;
-    glMatrix.mat4.rotate(yRotationMatrix, iMatrix, angle, [0, 1, 0]);
-    glMatrix.mat4.rotate(xRotationMatrix, iMatrix, angle/2, [1, 0, 0]);
+
+    // only transform if change is nonzero
+    if (xAngle != 0) {
+      glMatrix.mat4.rotate(xRotationMatrix, iMatrix, xAngle, [1, 0, 0]);
+    }
+    if (yAngle != 0){
+      glMatrix.mat4.rotate(yRotationMatrix, iMatrix, yAngle, [0, 1, 0]);
+    }
     glMatrix.mat4.mul(wMatrix, xRotationMatrix, yRotationMatrix);
     // update world matrix
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, wMatrix);
@@ -287,8 +292,8 @@ function calcSpeed() {
     yAxisSpeed += friction;
   }
 
-  console.log(`x = ${xAxisSpeed}`);
-  console.log(`y = ${yAxisSpeed}`);
+  // console.log(`x = ${xAxisSpeed}`);
+  // console.log(`y = ${yAxisSpeed}`);
 }
 
 
