@@ -235,8 +235,8 @@ var InitDemo = function () {
   // expects two Float32Array(16) and a canvas
   function ApplySpin(iMatrix, wMatrix, canvas) {
     var spr = 6; // seconds per revolution
-    var xAngle = xAxisSpeed * 2 * Math.log.PI;
-    var yAngle = yAxisSpeed * 2 * Math.log.PI;
+    var xAngle = xAxisSpeed * 2 * Math.PI;
+    var yAngle = yAxisSpeed * 2 * Math.PI;
     var gl = canvas.getContext("webgl");
 
     // only transform if change is nonzero
@@ -267,6 +267,7 @@ var InitDemo = function () {
 
 function calcSpeed() {
   var delta = 0.4;
+  var friction = 0.1;
   if(rightPressed) {
     yAxisSpeed += delta;
   }
@@ -280,7 +281,6 @@ function calcSpeed() {
     xAxisSpeed -= delta;
   }
   // apply friction
-  var friction = 0.2;
   if (xAxisSpeed > 0) {
     xAxisSpeed -= friction;
   } else {
@@ -292,8 +292,8 @@ function calcSpeed() {
     yAxisSpeed += friction;
   }
 
-  // console.log(`x = ${xAxisSpeed}`);
-  // console.log(`y = ${yAxisSpeed}`);
+  console.log(`x = ${xAxisSpeed}`);
+  console.log(`y = ${yAxisSpeed}`);
 }
 
 
