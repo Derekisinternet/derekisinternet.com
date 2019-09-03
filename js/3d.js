@@ -33,6 +33,15 @@ var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
 
+// for spin state
+var xAxisSpeed = 0.0;
+var yAxisSpeed = 0.0;
+var zAxisSpeed = 0.0;
+
+// some matrices
+var xRotationMatrix = new Float32Array(16);
+var yRotationMatrix = new Float32Array(16);
+
 // translates key names into input numbers
 var keyCodeTranslator = {
   left: 37, up: 38, right: 39, down: 40
@@ -215,9 +224,6 @@ var InitDemo = function () {
   gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
   gl.uniformMatrix4fv(matProjectorUniformLocation, gl.FALSE, projMatrix);
 
-  var xRotationMatrix = new Float32Array(16);
-  var yRotationMatrix = new Float32Array(16);
-
   // set up keyboard inputs
   document.addEventListener('keydown', keyDownHandler, false);
   document.addEventListener('keyup', keyUpHandler, false);
@@ -225,16 +231,24 @@ var InitDemo = function () {
   // main render loop
   var identityMatrix = new Float32Array(16);
   glMatrix.mat4.identity(identityMatrix);
-  var angle = 0;
-  var spr = 6; // seconds per revolution
-  var loop = function () {
+
+  // expects two Float32Array(16) and a canvas
+  function ApplySpin(iMatrix, wMatrix, canvas) {
+    var spr = 6; // seconds per revolution
+    var angle = 0;
+    var gl = canvas.getContext("webgl");
     // one rotation every 6 seconds
     angle = performance.now() / 1000 / spr * 2 * Math.PI;
-    glMatrix.mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
-    glMatrix.mat4.rotate(xRotationMatrix, identityMatrix, angle/2, [1, 0, 0]);
-    glMatrix.mat4.mul(worldMatrix, xRotationMatrix, yRotationMatrix);
+    glMatrix.mat4.rotate(yRotationMatrix, iMatrix, angle, [0, 1, 0]);
+    glMatrix.mat4.rotate(xRotationMatrix, iMatrix, angle/2, [1, 0, 0]);
+    glMatrix.mat4.mul(wMatrix, xRotationMatrix, yRotationMatrix);
     // update world matrix
-    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, wMatrix);
+  }
+  
+  var loop = function () {
+    calcSpeed();
+    ApplySpin(identityMatrix, worldMatrix, canvas);
     //clean up the previous frame
     gl.clearColor(0.75, 0.85, 0.8, 1.0);
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
@@ -245,6 +259,39 @@ var InitDemo = function () {
   requestAnimationFrame(loop);
 
 };
+
+function calcSpeed() {
+  var delta = 0.4;
+  if(rightPressed) {
+    yAxisSpeed += delta;
+  }
+  if (leftPressed) {
+    yAxisSpeed -= delta;
+  }
+  if (upPressed) {
+    xAxisSpeed += delta;
+  }
+  if (downPressed) {
+    xAxisSpeed -= delta;
+  }
+  // apply friction
+  var friction = 0.2;
+  if (xAxisSpeed > 0) {
+    xAxisSpeed -= friction;
+  } else {
+    xAxisSpeed += friction;
+  }
+  if (yAxisSpeed > 0) {
+    yAxisSpeed -= friction;    
+  } else {
+    yAxisSpeed += friction;
+  }
+
+  console.log(`x = ${xAxisSpeed}`);
+  console.log(`y = ${yAxisSpeed}`);
+}
+
+
 
 function keyDownHandler(event) {
   if(event.keyCode == 39) {
