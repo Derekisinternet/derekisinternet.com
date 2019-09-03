@@ -266,8 +266,8 @@ var InitDemo = function () {
 };
 
 function calcSpeed() {
-  var delta = 0.4;
-  var friction = 0.1;
+  var delta = 0.1;
+  var friction = 0.01;
   if(rightPressed) {
     yAxisSpeed += delta;
   }
