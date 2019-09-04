@@ -34,9 +34,11 @@ var upPressed = false;
 var downPressed = false;
 
 // for spin state
-var xAxisSpeed = 0.0;
-var yAxisSpeed = 0.0;
-var zAxisSpeed = 0.0;
+var xAngle = 0.0;
+var yAngle = 0.0;
+var xAxisDelta = -0.01;
+var yAxisDelta = 0.01;
+var zAxisSpeed = 0.1;
 
 // some matrices
 var xRotationMatrix = new Float32Array(16);
@@ -233,10 +235,7 @@ var InitDemo = function () {
   glMatrix.mat4.identity(identityMatrix);
 
   // expects two Float32Array(16) and a canvas
-  function ApplySpin(iMatrix, wMatrix, canvas) {
-    var spr = 6; // seconds per revolution
-    var xAngle = xAxisSpeed * 2 * Math.PI;
-    var yAngle = yAxisSpeed * 2 * Math.PI;
+  function applyPosition(iMatrix, wMatrix, canvas) {    
     var gl = canvas.getContext("webgl");
 
     // only transform if change is nonzero
@@ -252,8 +251,8 @@ var InitDemo = function () {
   }
   
   var loop = function () {
-    calcSpeed();
-    ApplySpin(identityMatrix, worldMatrix, canvas);
+    calcPosition();
+    applyPosition(identityMatrix, worldMatrix, canvas);
     //clean up the previous frame
     gl.clearColor(0.75, 0.85, 0.8, 1.0);
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
@@ -265,37 +264,37 @@ var InitDemo = function () {
 
 };
 
-function calcSpeed() {
-  var delta = 0.1;
-  var friction = 0.01;
+function calcPosition() {
+  var rad = 2* Math.PI;
+  var delta = 0.002;
+  var friction = 0.0005;
   if(rightPressed) {
-    yAxisSpeed += delta;
+    yAxisDelta += delta;
   }
   if (leftPressed) {
-    yAxisSpeed -= delta;
+    yAxisDelta -= delta;
   }
   if (upPressed) {
-    xAxisSpeed += delta;
+    xAxisDelta += delta;
   }
   if (downPressed) {
-    xAxisSpeed -= delta;
+    xAxisDelta -= delta;
   }
   // apply friction
-  if (xAxisSpeed > 0) {
-    xAxisSpeed -= friction;
-  } else {
-    xAxisSpeed += friction;
-  }
-  if (yAxisSpeed > 0) {
-    yAxisSpeed -= friction;    
-  } else {
-    yAxisSpeed += friction;
-  }
+  (xAxisDelta > 0) ? xAxisDelta -= friction : xAxisDelta += friction;
+  (yAxisDelta > 0) ? yAxisDelta -= friction : yAxisDelta += friction;    
 
-  console.log(`x = ${xAxisSpeed}`);
-  console.log(`y = ${yAxisSpeed}`);
+  // console.log(`x = ${xAxisDelta}`);
+  console.log(`y = ${yAxisDelta}`);
+  console.log(`x = ${xAxisDelta}`);
+
+  xAngle += xAxisDelta * rad;
+  yAngle += yAxisDelta * rad;
 }
 
+function calcDelta() {
+  
+}
 
 
 function keyDownHandler(event) {
