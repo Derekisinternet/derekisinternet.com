@@ -51,7 +51,7 @@ var keyCodeTranslator = {
 
 var InitDemo = function () {
   var canvas = document.getElementById("can");
-  if (canvas.width > window.innerWidth) {canvas.width = window.innerWidth;}
+  prepCanvas(canvas);
 
   var gl = canvas.getContext('webgl');
 
@@ -263,6 +263,11 @@ var InitDemo = function () {
   requestAnimationFrame(loop);
 
 };
+
+function prepCanvas(can){
+  can.width = window.innerWidth;
+  can.height = window.innerHeight * 2 / 3;
+}
 
 function calcPosition() {
   var rad = 2* Math.PI;

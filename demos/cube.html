@@ -3,13 +3,17 @@
   <head>
     <title>Cube</title>
     <link href="../css/default.css" rel="stylesheet" type="text/css">
+    <link href="css/default.css" rel="stylesheet" type="text/css">
   </head>
   <body onload="InitDemo();">
-    <canvas id="can" width="800" height="600" margin="auto"  padding="0" style="display: block">
-      Your browser does not support HTML5 >:(
-    </canvas>
-    <br />
-    <i margin="auto">Use the arrow keys to rotate the cube</i>
+    <div style="position: fixed; top:0; left: 0">
+      <canvas id="can" width="800" height="600" >
+        Your browser does not support HTML5 >:(
+      </canvas>
+      <p style="position: absolute; text-align: center; width: 100%">
+        <i margin="auto">Use the arrow keys to rotate the cube</i>
+      </p>
+    </div>
     <script src="../js/cube.js"></script>
     <script src= "../js/gl-matrix.js"></script>
   </body>
