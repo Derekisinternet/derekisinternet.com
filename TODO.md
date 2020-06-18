@@ -24,4 +24,4 @@
 ### 3D Cube
 
 - [ ] make canvas size responsive to window size
-- [ ] add key bindings for interactivity
+- [x] add key bindings for interactivity
