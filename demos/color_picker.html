@@ -5,32 +5,33 @@
     <link href="../css/default.css" rel="stylesheet" type="text/css">
     <link href="css/color_picker.css" rel="stylesheet" type="text/css">
   </head>
-  <body>
+  <body onload="initForms();">
     <h1>Color Picker</h1>
     <div class="row">
       <div class="column">
         <table id="colors">
           <tr>
             <td>Main Color</td>
-            <td id="main">
-              <input type="number" class="red" min="0" max="255" value="0">
-              <input type="number" class="green" min="0" max="255" value="0">
-              <input type="number" class="blue" min="0" max="255" value="0">
+            <td id="main" class="color-form">
+              <input type="range" class="red" min="0" max="255" value="0">
+              <input type="range" class="green" min="0" max="255" value="0">
+              <input type="range" class="blue" min="0" max="255" value="0">
               <input type="button" value="Submit" onclick="colorButtonEvent('main', 'background')">
             </td>
           </tr>
           <tr>
             <td>Secondary Color</td>
-            <td id="secondary">
-              <input type="number" class="red" min="0" max="255" value="0">
-              <input type="number" class="green" min="0" max="255" value="0">
-              <input type="number" class="blue" min="0" max="255" value="0">
+            <td id="secondary" class="color-form">
+              <input type="range" class="red" min="0" max="255" value="0">
+              <input type="range" class="green" min="0" max="255" value="0">
+              <input type="range" class="blue" min="0" max="255" value="0">
               <input type="button" value="Submit" onclick="colorButtonEvent('secondary', 'color')">
             </td>
           </tr>
         </table>
       </div>
       <div id="sample_div" class="column">
+        <h2>Chapter I: Which Treats of the Character and Pursuits of the Famous Gentleman Don Quixote of La Mancha</h2>
         <p class="sample_paragraph">In a village in La Mancha, the name of which I don't care to recall, there lived not long ago
           one of those hidalgos who keep a lance in a rack, an ancient leather shield, and a greyhound for
           coursing. A midday stew with rather more shin of beef than leg of mutton, the leftovers for supper

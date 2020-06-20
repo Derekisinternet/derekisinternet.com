@@ -24,3 +24,8 @@
 ### 3D Cube
 
 - [ ] make canvas size responsive to window size
+
+### Color Picker
+
+- [ ] determine which color form controls which elements/attributes
+- [ ] nicer color input ux

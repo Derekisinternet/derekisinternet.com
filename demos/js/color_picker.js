@@ -1,4 +1,14 @@
+// sets up the user input forms
+function initForms() {
+  var forms = document.getElementsByClassName("color-form");
+  for (i = 0; i < forms.length; i++) {
+    var form = forms[i];
+    console.log(form);
+    formNodes = form.childNodes;
+    console.log(formNodes);
 
+  }
+}
 
 function setColor(element, attrib, red, green, blue) {
   var elems = document.getElementsByClassName(element);
