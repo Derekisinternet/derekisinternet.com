@@ -5,7 +5,7 @@
     <link href="../css/default.css" rel="stylesheet" type="text/css">
     <link href="css/color_picker.css" rel="stylesheet" type="text/css">
   </head>
-  <body onload="initForms();">
+  <body>
     <h1>Color Picker</h1>
     <div class="row">
       <div class="column">
@@ -13,19 +13,15 @@
           <tr>
             <td>Main Color</td>
             <td id="main" class="color-form">
-              <input type="range" class="red" min="0" max="255" value="0">
-              <input type="range" class="green" min="0" max="255" value="0">
-              <input type="range" class="blue" min="0" max="255" value="0">
-              <input type="button" value="Submit" onclick="colorButtonEvent('main', 'background')">
+              <input type="color" id="main-color">
+              <input type="button" value="Submit" onclick="colorButtonEvent('main-color', 'background')">
             </td>
           </tr>
           <tr>
             <td>Secondary Color</td>
             <td id="secondary" class="color-form">
-              <input type="range" class="red" min="0" max="255" value="0">
-              <input type="range" class="green" min="0" max="255" value="0">
-              <input type="range" class="blue" min="0" max="255" value="0">
-              <input type="button" value="Submit" onclick="colorButtonEvent('secondary', 'color')">
+              <input type="color" id="secondary-color">
+              <input type="button" value="Submit" onclick="colorButtonEvent('secondary-color', 'color')">
             </td>
           </tr>
         </table>

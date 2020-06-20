@@ -1,31 +1,14 @@
-// sets up the user input forms
-function initForms() {
-  var forms = document.getElementsByClassName("color-form");
-  for (i = 0; i < forms.length; i++) {
-    var form = forms[i];
-    console.log(form);
-    formNodes = form.childNodes;
-    console.log(formNodes);
 
-  }
-}
-
-function setColor(element, attrib, red, green, blue) {
+function setColor(element, attrib, color) {
   var elems = document.getElementsByClassName(element);
   console.log(`found ${elems.length} elements`);
   for (i = 0; i < elems.length; i++) {
-    newColor = `rgb(${red}, ${green}, ${blue})`;
-    elems[i].style[`${attrib}`] = newColor;
+    elems[i].style[`${attrib}`] = color;
+    console.log(`color: ${color} set!`)
   }
 }
 
 function colorButtonEvent(formId, attribute) {
-  var elem = document.getElementById(formId);
-  var colors = elem.childNodes;
-  var r = colors[1].value;
-  var g = colors[3].value;
-  var b = colors[5].value;
-  // TODO: make more dynamic
-  setColor("sample_paragraph", attribute, r, g, b);
-  console.log("new color set!");
+  var color = document.getElementById(formId).value;
+  setColor("sample_paragraph", attribute, color);
 }
