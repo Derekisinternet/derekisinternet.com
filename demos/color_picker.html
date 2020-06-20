@@ -6,17 +6,26 @@
     <link href="css/color_picker.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <h1>Header</h1>
+    <h1>Color Picker</h1>
     <div class="row">
       <div class="column">
         <table id="colors">
           <tr>
             <td>Main Color</td>
-            <td>
-              <input type="number" class="red" min="0" max="255">
-              <input type="number" class="green" min="0" max="255">
-              <input type="number" class="blue" min="0" max="255">
-              <input type="button" value="Submit">
+            <td id="main">
+              <input type="number" class="red" min="0" max="255" value="0">
+              <input type="number" class="green" min="0" max="255" value="0">
+              <input type="number" class="blue" min="0" max="255" value="0">
+              <input type="button" value="Submit" onclick="colorButtonEvent('main', 'background')">
+            </td>
+          </tr>
+          <tr>
+            <td>Secondary Color</td>
+            <td id="secondary">
+              <input type="number" class="red" min="0" max="255" value="0">
+              <input type="number" class="green" min="0" max="255" value="0">
+              <input type="number" class="blue" min="0" max="255" value="0">
+              <input type="button" value="Submit" onclick="colorButtonEvent('secondary', 'color')">
             </td>
           </tr>
         </table>
@@ -42,5 +51,5 @@
       </div>
     </div>
   </body>
-
+  <script src="js/color_picker.js"></script>
 </html>
