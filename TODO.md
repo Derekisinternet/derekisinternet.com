@@ -27,5 +27,7 @@
 
 ### Color Picker
 
-- [ ] determine which color form controls which elements/attributes
+- [ ] Configure form for choosing elements
+  - dropdown menu for element type
+  - dropdown menu for element attribute
 - [ ] make color input form prettier

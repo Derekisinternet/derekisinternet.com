@@ -5,24 +5,31 @@
     <link href="../css/default.css" rel="stylesheet" type="text/css">
     <link href="css/color_picker.css" rel="stylesheet" type="text/css">
   </head>
-  <body onload="initForms();">
+  <body>
     <h1>Color Picker</h1>
     <div class="row">
       <div class="column">
-        <table id="colors">
-          <button class="accordion">Body</button>
+        <table>
           <tr>
-            <td>Main Color</td>
-            <td id="main" class="color-form">
-              <input type="color" id="main-color">
-              <input type="button" value="Submit" onclick="colorButtonEvent('main-color', 'background')">
+            <td> Primary Color</td>
+            <td><input type="color" id="main_color"></td>
+            <td>
+              <div class="dropdown">
+                <button class="dropbtn">Elements</button>
+                <table class="dropdown-content" id="main-elements">
+                  <tr>
+                    <td><input type="checkbox" name="h2"></td>
+                    <td><label for="h2">header</label></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" name="p">
+                    <td><label for="p">paragraph</label></td>
+                  </tr>
+                </table>
+              </div>
             </td>
-          </tr>
-          <tr>
-            <td>Secondary Color</td>
-            <td id="secondary" class="color-form">
-              <input type="color" id="secondary-color">
-              <input type="button" value="Submit" onclick="colorButtonEvent('secondary-color', 'color')">
+            <td>
+              <input type="button" value="Submit" onclick="colorButtonEvent('main_color', 'main-elements')">
             </td>
           </tr>
         </table>
