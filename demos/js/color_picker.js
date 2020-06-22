@@ -11,15 +11,23 @@ function setColor(element, attrib, color) {
 function colorButtonEvent(colorInput, elementForm) {
   var color = document.getElementById(colorInput).value;
   var targets = getColorTargets(elementForm);
-  var attribute = "background";
-  // for (i = 0; i < targets.length; i++) {
-  //   setColor("sample_paragraph", attribute, color);
-  // }
+  console.log(targets);
+  for (let [key, value] of Object.entries(targets)) {
+    // do stuff
+  }
 }
 
 // extracts a collections of elements/attributes to apply the color to
 function getColorTargets(formId) {
-  var nodes = document.getElementById(formId).childNodes;
-  console.log(nodes);
-
+  var out = {};
+  var rows = document.getElementById(formId).children[0].children;
+  for (i = 0; i < rows.length; i++) {
+    var columns = rows[i].children;
+    var input = columns[0];
+    if (input.checked === true) {
+      // TODO: make target attributes configurable
+      out[`${input.name}`] = ['background'];
+    }
+  }
+  return out;
 }
