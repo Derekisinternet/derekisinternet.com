@@ -17,13 +17,15 @@ function colorButtonEvent(colorInput, elementForm) {
   }
 }
 
-// extracts a collections of elements/attributes to apply the color to
+// extracts a collections of elements to apply the color to
 function getColorTargets(formId) {
   var out = {};
   var rows = document.getElementById(formId).children[0].children;
+  console.log(`rows: ${rows}`);
   for (i = 0; i < rows.length; i++) {
     var columns = rows[i].children;
-    var input = columns[0];
+    var input = columns[0].firstChild;
+    console.log(input);
     if (input.checked === true) {
       // TODO: make target attributes configurable
       out[`${input.name}`] = ['background'];
