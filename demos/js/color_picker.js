@@ -1,6 +1,6 @@
 
 function setColor(element, attrib, color) {
-  var elems = document.getElementsByClassName(element);
+  var elems = document.getElementsByTagName(element);
   console.log(`found ${elems.length} elements`);
   for (i = 0; i < elems.length; i++) {
     elems[i].style[`${attrib}`] = color;
@@ -10,10 +10,12 @@ function setColor(element, attrib, color) {
 
 function colorButtonEvent(colorInput, elementForm) {
   var color = document.getElementById(colorInput).value;
+  console.log(`color value: ${color}`);
   var targets = getColorTargets(elementForm);
-  console.log(targets);
   for (let [key, value] of Object.entries(targets)) {
-    // do stuff
+    for (i=0; i < value.length; i++) {
+      setColor(key, value[i], color);
+    }
   }
 }
 
