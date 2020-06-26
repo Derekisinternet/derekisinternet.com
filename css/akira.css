@@ -5,20 +5,35 @@
   --night-concrete: #5f7cb7;
   --night-white: #a9bde5;
   --shirt-green: #818e69;
-  --matrix-green-light: #36c46d;
-  --matrix-green-med: #18af52;
-  --matrix-green-dark: #05722f;
+  --matrix-green1: #36c46d;
+  --matrix-green2: #18af52;
+  --matrix-green3: #05722f;
+
+  --purple1: #e179fe;
+  --purple2: #a81ec4;
+  --purple3: #55116c;
 }
 
 body {
+  height: 100%;
   background: black;
-  color: var(--tetsuo-blue);
+  background: linear-gradient(to bottom, var(--night-concrete), var(--purple3));
+  background-repeat: no-repeat;
+  color: var(--electric-yellow);
   font-family: sans-serif;
 }
+
 h1 {
   font-family: Helvetica, sans-serif;
   text-transform: uppercase;
   text-align: center;
   color: var(--akira-red);
+  background: black;
 
+}
+
+a {
+  link: var(--matrix-green1);
+  active: var(--matrix-green3);
+  visited: var(--matrix-green2);
 }

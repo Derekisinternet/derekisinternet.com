@@ -1,11 +1,13 @@
 :root {
-  --purple1: #972d9d;
-  --purple2: #551259;
-  --purple3: #3d0c3f;
+  --blue: #12156c;
+  --dark-blue: #0d1243;
+  --darker-blue: #04092e;
   --orange1: #ce6904;
   --orange2: #9a4f00;
   --orange3: #211100;
-  --dark-blue: #15092e;
+  --purple1: #972d9d;
+  --purple2: #551259;
+  --purple3: #3d0c3f;
   --teal1: #448D76;
   --teal2: #29675d;
 }
@@ -18,17 +20,23 @@ a.dark-bg:link {color:var(--purple1);}
 a.dark-bg:visited {color:var(--purple1);}
 a.dark-bg:hover {font-size:150%;}
 
+html {
+  height: 100%;
+  background: black;
+}
+
 body {
-  background: var(--dark-blue);/* for browsers that don't support gradients */
-  background: linear-gradient(to right, #313274, #15092e);
+  background: black;/* for browsers that don't support gradients */
+  background: linear-gradient(to top, var(--dark-blue), var(--darker-blue));
   color:var(--orange1);
   font-family: sans-serif;
+  height: 100%
 }
 
 h1 {
   background: var(--orange1);
   background: linear-gradient(to bottom right, var(--orange1), var(--purple1));
-  color: var(--orange3);
+  color: var(--dark-blue);
   display: inline-block;
   font-size: 300%;
   max-width: 300px;
@@ -36,6 +44,8 @@ h1 {
   padding-right: 10px;
   text-align: center;
 }
+
+
 
 ul {
   list-style-type: none;

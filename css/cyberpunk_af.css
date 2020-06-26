@@ -1,0 +1,60 @@
+:root {
+  --blue1: #4e6ee1;
+  --blue2: #011765;
+  --blue3: #000055;
+
+  --indigo: #8af0f7;
+
+  --green1: #5ccb5c;
+  --green2: #1a791a;
+  --green3: #0d3c09;
+
+  --gray1: #414b54;
+  --gray2: #2a2b2d;
+  --gray3: #1a1a1a;
+
+  --orange1: #ffaa4b;
+  --orange2: #f88126;
+  --orange3: #983500;
+
+  --purple1: #972d9d;
+  --purple2: #7c1491;
+  --purple3: #3d0f4d;
+}
+
+html {
+  height: 100%;
+}
+
+a {
+
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background: black;
+  background: linear-gradient(to bottom, var(--blue3), var(--purple3));
+}
+
+h1 {
+  background: var(--blue3);
+  background: linear-gradient(to bottom right, var(--purple3), var(--purple2));
+  color: var(--orange1);
+  font-size: 245%
+}
+
+#main-content {
+  background: var(--gray3);
+  border-color: var(--green3);
+  border-style: solid none none none;
+  color: var(--green1);
+  font-family: "Lucida Console", Courier, monospace;
+  margin: auto;
+  max-width: 80%;
+  padding: 5px;
+}
+
+#navigator {
+  list-style: none;
+}
