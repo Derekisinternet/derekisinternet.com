@@ -95,33 +95,15 @@ ul {
   max-width: 100%;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> cube colors
 .content-index {
   background: var(--purple3);
   color: var(--orange1);
 }
 
 
-<<<<<<< HEAD
 .playlist-button {
   background: var(--orange1);
   background: linear-gradient(to bottom, var(--orange1), var(--purple1));
   color: var(--dark-blue);
   border-color: var(--orange1);
-=======
-=======
->>>>>>> cube colors
-.playlist-button {
-  background: var(--orange1);
-  background: linear-gradient(to bottom, var(--orange1), var(--purple1));
-  color: var(--dark-blue);
-<<<<<<< HEAD
-  border-color: var(--orange);
->>>>>>> fixed tyop
-=======
-  border-color: var(--orange1);
->>>>>>> cube colors
 }

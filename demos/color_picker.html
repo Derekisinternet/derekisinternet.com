@@ -32,6 +32,26 @@
               <input type="button" value="Submit" onclick="colorButtonEvent('main_color', 'main-elements')">
             </td>
           </tr>
+          <tr>
+            <td> Secondary Color</td>
+            <td><input type="color" id="main_color"></td>
+            <td>
+              <div class="dropdown">
+                <button class="dropbtn">Elements</button>
+                <ul class="dropdown-content" id="second-elements">
+                  <li class="dropdwon-submenu">
+                    <button name="h2">headers</button>
+                  </li>
+                  <li class="dropdwon-submenu">
+                    <button name="p">paragraph</button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td>
+              <input type="button" value="Submit" onclick="colorButtonEvent('main_color', 'second-elements')">
+            </td>
+          </tr>
         </table>
       </div>
       <div id="sample_div" class="column">

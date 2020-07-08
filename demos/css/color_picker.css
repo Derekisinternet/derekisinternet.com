@@ -17,6 +17,12 @@
   z-index: 1;
 }
 
+.dropdown-submenu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+
 .dropdown:hover .dropdown-content {display: block;}
 
 .dropdown-content a:hover {background-color: #ddd;}

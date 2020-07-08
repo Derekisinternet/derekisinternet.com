@@ -49,64 +49,7 @@ var keyCodeTranslator = {
   left: 37, up: 38, right: 39, down: 40
 }
 
-var InitDemo = function () {
-  var canvas = document.getElementById("can");
-  prepCanvas(canvas);
-
-  var gl = canvas.getContext('webgl');
-
-  if (!gl) {
-    console.log("WebGL not supported, falling back to experimental")
-    gl = canvas.getContext('experimental-webgl');
-  }
-
-  if (!gl) {
-  alert("Your browser does not support webgl >:(");
-  }
-
-  gl.clearColor(0.90, 0.90, 0.08, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  //dont draw pixel if it's behind something already drawn
-  gl.enable(gl.DEPTH_TEST);
-  //enable back face culling
-  gl.enable(gl.CULL_FACE);
-  gl.frontFace(gl.CCW);
-  gl.cullFace(gl.BACK);
-
-  var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-  var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-
-  gl.shaderSource(vertexShader, vertexShaderText);
-  gl.shaderSource(fragmentShader, fragmentShaderText);
-
-  gl.compileShader(vertexShader);
-  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-    console.error('ERROR compiling vertex shader', gl.getShaderInfoLog(vertexShader));
-    return;
-  }
-  gl.compileShader(fragmentShader);
-  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-    console.error('ERROR compiling vertex shader', gl.getShaderInfoLog(fragmentShader));
-    return;
-  }
-
-  var program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error('ERROR linking program', gl.getProgramInfoLog(program));
-    return;
-  }
-  // validates program, instructor not exactly sure what
-  gl.validateProgram(program);
-  if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
-    console.error('ERROR validating program', gl.getProgram(program));
-    return;
-  }
-
-  // create buffer
-  var boxVertices =
+var boxVertices =
   [// x, y, z         R, G, B
    // Top
    -1.0, 1.0, -1.0,   0.0,1.0,0.15,
@@ -172,6 +115,63 @@ var InitDemo = function () {
     22,20,23
   ];
 
+var InitDemo = function () {
+  var canvas = document.getElementById("can");
+  prepCanvas(canvas);
+
+  var gl = canvas.getContext('webgl');
+
+  if (!gl) {
+    console.log("WebGL not supported, falling back to experimental")
+    gl = canvas.getContext('experimental-webgl');
+  }
+
+  if (!gl) {
+  alert("Your browser does not support webgl >:(");
+  }
+
+  gl.clearColor(0.90, 0.90, 0.08, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  //dont draw pixel if it's behind something already drawn
+  gl.enable(gl.DEPTH_TEST);
+  //enable back face culling
+  gl.enable(gl.CULL_FACE);
+  gl.frontFace(gl.CCW);
+  gl.cullFace(gl.BACK);
+
+  var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+  var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+  gl.shaderSource(vertexShader, vertexShaderText);
+  gl.shaderSource(fragmentShader, fragmentShaderText);
+
+  gl.compileShader(vertexShader);
+  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+    console.error('ERROR compiling vertex shader', gl.getShaderInfoLog(vertexShader));
+    return;
+  }
+  gl.compileShader(fragmentShader);
+  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+    console.error('ERROR compiling vertex shader', gl.getShaderInfoLog(fragmentShader));
+    return;
+  }
+
+  var program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error('ERROR linking program', gl.getProgramInfoLog(program));
+    return;
+  }
+  // validates program, instructor not exactly sure what
+  gl.validateProgram(program);
+  if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
+    console.error('ERROR validating program', gl.getProgram(program));
+    return;
+  }
+
+  // create buffer
   var boxVertxexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, boxVertxexBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
