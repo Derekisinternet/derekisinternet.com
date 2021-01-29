@@ -21,16 +21,20 @@ a.dark-bg:visited {color:var(--purple1);}
 a.dark-bg:hover {font-size:150%;}
 
 html {
+  background: rgb(34, 34, 34);
   height: 100%;
-  background: black;
+  margin: 0;
+  overflow: hidden;
 }
 
 body {
-  background: black;/* for browsers that don't support gradients */
+  background: rgb(40, 38, 38);/* for browsers that don't support gradients */
   background: linear-gradient(to top, var(--dark-blue), var(--darker-blue));
   color:var(--orange1);
   font-family: sans-serif;
-  height: 100%
+  height: 100%;
+  margin: 0;
+  /* overflow: hidden; */
 }
 
 h1 {
