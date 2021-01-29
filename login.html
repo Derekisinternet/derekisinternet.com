@@ -1,19 +1,21 @@
 <!DOCTYPE html>
+<!-- I made this page as a joke.-->
 <html lang="en-US" class="no-js no-svg">
   <head>
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width,initial-scale=1.0'>
-    <title>Derek is internet</title>
+    <title>Sign In</title>
     <link href="css/default.css" rel="stylesheet" type="text/css">
   </head>
-  <body>
-    <form>
+  <body onload="init();">
+    <div id="form">
       <label for="uname">Username:</label>
       <input type="text" id="uname">
       <label for="pword">Password:</label>
-      <input type="text" id="pword">
-      <input type="button" value="Submit">
-    </form>
+      <input type="password" id="pword">
+      <input type="button" value="Submit" onclick="submit();"/>
+    </div>
+    <p id="message"></p>
     <script src="js/login.js"></script>
   </body>
 </html>
