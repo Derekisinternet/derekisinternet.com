@@ -28,9 +28,13 @@
       vines = [{x:0,y:0,a:0,ai:0,w:8,p:[],l:MAX}]
     }
     // create an audio oscillator
-    var o = new AudioContext().createOscillator();
+    con = new AudioContext();
+    var o = con.createOscillator();
     o.type = "sine";
-    o.connect()
+    o.connect(con.destination);
+    // create a gain node for oscillator
+    g = con.createGain();
+    g.connect(con.destination);
 
     // UPDATE TIME
     currTime = performance.now() / 1000;
@@ -78,6 +82,7 @@
     H = b.height = 512;
     W = b.width = 0 | H * innerWidth / innerHeight;
     c.translate(W/2, H/2);
+    o.start();
     // c.shadowBlur = 1;
     vines.forEach(v => {
       // c.shadowColor = 
@@ -93,5 +98,6 @@
       }
     })
     
+    // AUDIO METHODS
   }
 </script>
