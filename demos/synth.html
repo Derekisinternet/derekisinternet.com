@@ -1,6 +1,33 @@
 <style></style>
 <!-- <canvas id="can"></canvas> -->
-<div>
-  <input type="button" id="switch"><
+<div class="controls">
+  <input type="button" id="switch" value="on">
+  <input type="range" min="0.0" max="1.0" step="0.1" name="Volume">
 </div>
-<script></script>
+<script onload='init();'>
+  var context, o, g;
+  onload = function init(){
+    context = new window.AudioContext();
+    o = context.createOscillator();
+    g = context.createGain();
+    o.connect(g);
+    g.connect(context.destination);
+    document.getElementById("switch").onclick = function() { powerSwitch(o,context) };
+    console.log("all ready");
+  }
+
+  function powerSwitch(osc, ctx) {
+    ctx.resume();
+    var val = document.getElementById("switch").value;
+    if (val == "on") {
+      console.log("turning on");
+      //init audio
+      osc.start();
+      document.getElementById("switch").value = "off";
+    } else {
+      console.log("turning on");
+      osc.stop();
+      document.getElementById("switch").value = "on";
+    }
+  }
+</script>
