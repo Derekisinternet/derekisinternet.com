@@ -1,56 +1,67 @@
 :root {
-  --purple: #982ba0;
-  --orange: #ce6904;
-  --dark-blue: #140b44;
-  
+  --purple1: #972d9d;
+  --purple2: #551259;
+  --purple3: #3d0c3f;
+  --orange1: #ce6904;
+  --orange2: #9a4f00;
+  --orange3: #211100;
+  --dark-blue: #15092e;
+  --teal1: #448D76;
+  --teal2: #29675d;
 }
 
+a.content-link:link { color:var(--orange1);}
+a.content-link:visited { color:var(--orange2);}
+a.content-link:hover {font-size:150%;}
+
+a.dark-bg:link {color:var(--purple1);}
+a.dark-bg:visited {color:var(--purple1);}
+a.dark-bg:hover {font-size:150%;}
+
 body {
-  background: #4748ac;/* for browsers that don't support gradients */
-  background: linear-gradient(to right, #4054a0, #0f092e);
-  color: #448D76;
+  background: var(--dark-blue);/* for browsers that don't support gradients */
+  background: linear-gradient(to right, #313274, #15092e);
+  color:var(--orange1);
   font-family: sans-serif;
 }
 
 h1 {
-  max-width: 300px;
-  background: var(--orange);
-  background: linear-gradient(to bottom right, var(--orange), var(--purple));
-  text-align: center;
-  color: var(--dark-blue);
+  background: var(--orange1);
+  background: linear-gradient(to bottom right, var(--orange1), var(--purple1));
+  color: var(--orange3);
+  display: inline-block;
   font-size: 300%;
-}
-
-p {
-  color: green;
-  display: block;
-  
+  max-width: 300px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
 }
 
 ul {
   list-style-type: none;
 }
 
-#navigator {
-  background: var(--orange);
-  background: linear-gradient(to bottom, var(--orange), var(--purple));
-}
-
 #main-content {
   margin: auto;
   max-width: 90%;
-  background: var(--dark-blue);
+  background: var(--orange3);
   display: block;
-  padding: 5px;
+  padding: 10px;
   border-style: none solid none none;
-  border-color: var(--orange);
+  border-color: var(--orange2);
+
 }
 
-.playlist-button {
-  background: var(--orange);
-  background: linear-gradient(to bottom, var(--orange), var(--purple));
-  color: var(--dark-blue);
-  border-color: var(--orange);
+#navigator {
+  background: var(--orange1);
+  background: linear-gradient(to bottom, var(--orange1), var(--purple1));
+  list-style: none;
+  margin: 0;
+}
+
+#navigator a {
+  display: block;
+  text-decoration: none;
 }
 
 #youtube-player {
@@ -60,3 +71,15 @@ ul {
   max-width: 100%;
 }
 
+.content-index {
+  background: var(--purple3);
+  color: var(--orange1);
+}
+
+
+.playlist-button {
+  background: var(--orange1);
+  background: linear-gradient(to bottom, var(--orange1), var(--purple1));
+  color: var(--dark-blue);
+  border-color: var(--orange1);
+}
