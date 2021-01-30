@@ -15,15 +15,16 @@ function oscillatorFactory(con, name, ) {
   console.log('creating new oscillator');
   // create oscillator and vol
   o = con.createOscillator();
+  o.start(); // can only call start once, from then on, gotta dis/re-connect to toggle
   g = con.createGain();
   o.connect(g);
-  g.connect(con.destination);
+  // g.connect(con.destination);
   // create ui elements to control osc
   var m = moduleFactory(name);
   var powerBtn = document.createElement("input");
   powerBtn.type = "button";
   powerBtn.value = "on";
-  powerBtn.onclick = function() {powerSwitch(o, con, powerBtn);}
+  powerBtn.onclick = function() {powerSwitch(g, con, powerBtn);}
 
   var volKnob = document.createElement("input");
   volKnob.type = "range";
@@ -36,19 +37,18 @@ function oscillatorFactory(con, name, ) {
 }
 
 // rudimentary oscillar function. Will Delete later, IDK
-// osc - oscillator to control
+// inp - input to control
 // ctx - audiocontext
 // btn - the button that calls this method
-function powerSwitch(osc, ctx, btn) {
+function powerSwitch(inp, ctx, btn) {
   ctx.resume();
   if (btn.value == "on") {
     console.log("turning on");
-    //init audio
-    osc.start();
+    inp.connect(ctx.destination);
     btn.value = "off";
   } else {
-    console.log("turning on");
-    osc.stop();
+    console.log("turning off");
+    inp.disconnect(ctx.destination);
     btn.value = "on";
   }
 }
