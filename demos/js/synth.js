@@ -6,6 +6,7 @@ function init(){
   start.type="button";
   start.value = "start";
   start.onclick = function() {oscillatorFactory(context, "osc1");}
+
   document.getElementById("patchPanel").appendChild(start);
   console.log("all ready");
 }
@@ -18,6 +19,7 @@ function oscillatorFactory(con, name) {
   o.start(); // can only call start once, from then on, gotta dis/re-connect to toggle
   g = con.createGain();
   o.connect(g);
+
   // create ui elements to control osc
   var m = moduleFactory(name);
   var powerBtn = document.createElement("input");
@@ -30,8 +32,25 @@ function oscillatorFactory(con, name) {
   volKnob.min = "0.0";
   volKnob.max = '1.0';
   volKnob.step = '0.1';
-  volKnob.oninput = function() {gainAdjust(g, volKnob.value); console.log("setting val to " + volKnob.value)}
+  function gainAdjust(node, val) {
+    node.gain.value = val;
+  }
+  volKnob.oninput = function() {gainAdjust(g, volKnob.value);}
 
+  var waveShaper = document.createElement("select");
+  w = ["sine","square","sawtooth","triangle"];
+  w.forEach( item => {
+    e = document.createElement("option");
+    e.value = item;
+    e.innerHTML = item;
+    waveShaper.appendChild(e);
+  });
+  function setW(osc, val) {
+    osc.type = val;
+  }
+  waveShaper.onchange = function() {setW(o, waveShaper.value);}
+
+  m.appendChild(waveShaper);
   m.appendChild(volKnob);
   m.appendChild(powerBtn);
 
@@ -53,11 +72,6 @@ function powerSwitch(inp, ctx, btn) {
     inp.disconnect(ctx.destination);
     btn.value = "on";
   }
-}
-
-// adjust the output of a gain node
-function gainAdjust(node, val) {
-  node.gain.value = val;
 }
 
 // low-level helper that constructs a ui element
