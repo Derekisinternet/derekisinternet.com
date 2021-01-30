@@ -9,10 +9,16 @@
 
 ## Synth
 
-- [ ] create oscillator factory
+- [x] create oscillator factory
   - [x] create oscillator
   - [x] create ui artifact that controls oscillator
-  - [ ] refactor power button to control local instance, rather than single global
-  
+  - [x] refactor power button to control local instance, rather than single global
+- [ ] control oscillator volume
+  - [ ] fix volume slider display
+  - [ ] update gain when slider changed
+
+- [ ] 
 
 - [ ] create patch mechanism
+
+- [ ] do some css
