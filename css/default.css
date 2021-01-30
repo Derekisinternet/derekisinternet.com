@@ -35,6 +35,17 @@ h1 {
   padding-left: 10px;
   padding-right: 10px;
   text-align: center;
+<<<<<<< HEAD
+=======
+  color: var(--orange3);
+  font-size: 300%;
+}
+
+p {
+  color: var(--orange);
+  display: block;
+  
+>>>>>>> style update
 }
 
 ul {
