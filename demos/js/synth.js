@@ -23,7 +23,7 @@ function oscillatorFactory(name) {
   racks[oscillator.name] = oscillator; // add to global reference
   var parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
-  initOscUI(oscillator, parentDiv);
+  initOscUI(oscillator.name, parentDiv);
   // set oscillator volume to volume slider value
   var vol = document.getElementById(oscillator.name+'-vol').value;
   racks[name].setVolume(vol);
@@ -62,9 +62,8 @@ function OscMod(name) {
   }
 }
 
-// takes an OscMod object, a div to live in, and a unique identifier
-function initOscUI(osc, parentDiv) {
-  var name = osc.name;
+// takes an OscMod name to pair with, and a div to live in
+function initOscUI(name, parentDiv) {
   // VIEW
   var powerBtn = document.createElement("input");
   powerBtn.id = name+'-pwr';
