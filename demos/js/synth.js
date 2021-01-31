@@ -3,13 +3,14 @@ var context, oscCount, racks;
 function init(){
   racks = {}; // memory to hold units
   context = new window.AudioContext();
-  oscCount = 0; // ensure each oscillator has a unique name
+
 
   start = document.createElement("input");
   start.type="button";
   start.value = "start";
   start.onclick = function() {
-    mod = oscillatorFactory(context, "osc" + oscCount);
+    context.resume();
+    mod = oscillatorFactory(context, "osc-" + Object.keys(racks).length);
     racks[mod.name] = mod;
   }
 
@@ -45,7 +46,8 @@ function OscMod(ctx, name) {
   }
 
   this.setWave = function(type) {
-    this.osc.type = type;
+    osc = racks[this.name].osc;
+    osc.type = type;
   }
 }
 
@@ -57,19 +59,19 @@ function OscUI(osc, div, name) {
   this.parentDiv = div;
 
   powerBtn = document.createElement("input");
-  powerBtn.id = "osc-"+this.name+'-pwr';
+  powerBtn.id = this.name+'-pwr';
   powerBtn.type = "button";
   powerBtn.value = "on";
   
   volKnob = document.createElement("input");
-  volKnob.id = "osc-"+this.name+'-vol';
+  volKnob.id = this.name+'-vol';
   volKnob.type = "range";
   volKnob.min = "0.0";
   volKnob.max = '1.0';
   volKnob.step = '0.1';
   
   waveShaper = document.createElement("select");
-  waveShaper.id = "osc-"+this.name+'-wve';
+  waveShaper.id = this.name+'-wve';
   w = ["sine","square","sawtooth","triangle"];
   w.forEach( item => {
     e = document.createElement("option");
@@ -85,7 +87,11 @@ function OscUI(osc, div, name) {
   // CONTROLLERs
   powerBtn.onclick = function() {
     btn = document.getElementById(powerBtn.id);
-    unit = racks[name];
+    index = btn.id.slice(0, -4);
+    unit = racks[index];
+    console.log('button '+btn.id+' click');
+    console.log(unit);
+
     if (btn.value == "on") {
       unit.setVolume(0);
       btn.value = "off";
@@ -97,10 +103,18 @@ function OscUI(osc, div, name) {
   }
 
   waveShaper.onchange = function() {
-    this.oscMod.setWave(waveShaper.value);
+    wave = document.getElementById(waveShaper.id);
+    index = wave.id.slice(0, -4);
+    mod = racks[index];
+    mod.setWave(waveShaper.value);
   }
 
-  volKnob.oninput = function() {this.oscMod.setVolume(volKnob.value);}
+  volKnob.oninput = function() {
+    vol = document.getElementById(volKnob.id);
+    index = vol.id.slice(0,-4);
+    mod = racks[index];
+    mod.setVolume(vol.value);
+  }
 }
 
 // low-level helper that constructs a ui element
