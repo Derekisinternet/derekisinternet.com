@@ -17,7 +17,8 @@
 - [x] control oscillator waveform
 - [x] update gain when slider changed
 - [x] BUG: creating multiple oscillators confuses each oscillator's toggle button
-- [ ] BUG: oscillator gain not set until clicking volume input
+- [x] BUG: oscillator gain not set until clicking volume input
+- [x] BUG: volume knobs have same problem as toggle buttons did
 - [ ] set oscillator frequency
 - f
 

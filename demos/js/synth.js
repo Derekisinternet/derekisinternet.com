@@ -10,7 +10,7 @@ function init(){
   start.value = "add oscillator";
   start.onclick = function() {
     context.resume();
-    mod = oscillatorFactory(context, "osc-" + Object.keys(racks).length);
+    mod = oscillatorFactory("osc-" + Object.keys(racks).length);
     
   }
   document.getElementById("patchPanel").appendChild(start);
@@ -19,15 +19,15 @@ function init(){
 // takes an audioContext and name, adds an oscillator to the ui
 function oscillatorFactory(name) {
   // MODEL
-  oscillator = new OscMod(name);
+  var oscillator = new OscMod(name);
   racks[oscillator.name] = oscillator; // add to global reference
   console.log('new OscMod');
   console.log(racks);
-  parentDiv = document.getElementById('patchPanel');
+  var parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator, parentDiv);
   // set oscillator volume to volume slider value
-  vol = document.getElementById(oscillator.name+'-vol').value;
+  var vol = document.getElementById(oscillator.name+'-vol').value;
   racks[name].setVolume(vol);
   return oscillator;
 }
@@ -95,11 +95,13 @@ function initOscUI(osc, parentDiv) {
 
   // CONTROLLERS
   powerBtn.onclick = function() {
+    console.log(this);
     var btn = document.getElementById(powerBtn.id);
     index = btn.id.slice(0, -4);
     unit = racks[index];
-    console.log('powerbtn.id: '+powerBtn.id);
-    console.log('button '+btn.id+' click. Unit returned:');
+  
+    console.log('powerbtn pressed: '+powerBtn.id);
+    console.log('found element: '+btn.id+' click. found rack unit:');
     console.log(unit);
 
     if (btn.value == "stop") {
