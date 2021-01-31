@@ -7,7 +7,7 @@ function init(){
   // init button to create modules
   start = document.createElement("input");
   start.type="button";
-  start.value = "start";
+  start.value = "add oscillator";
   start.onclick = function() {
     context.resume();
     mod = oscillatorFactory(context, "osc-" + Object.keys(racks).length);
