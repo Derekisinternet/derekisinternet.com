@@ -21,8 +21,6 @@ function oscillatorFactory(name) {
   // MODEL
   var oscillator = new OscMod(name);
   racks[oscillator.name] = oscillator; // add to global reference
-  console.log('new OscMod');
-  console.log(racks);
   var parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator, parentDiv);
@@ -46,8 +44,6 @@ function OscMod(name) {
   this.setVolume = function(f) {
     if (1.0 < f) {f= 1.0;}
     gain = racks[this.name].gain.gain;
-    console.log("gain:");
-    console.log(gain);
     gain.setValueAtTime(f, context.currentTime);
   }
 
@@ -96,39 +92,37 @@ function initOscUI(osc, parentDiv) {
   // CONTROLLERS
   powerBtn.onclick = function() {
     console.log(this);
-    var btn = document.getElementById(powerBtn.id);
-    index = btn.id.slice(0, -4);
-    unit = racks[index];
+    var index = this.id.slice(0, -4);
+    var unit = racks[index];
   
-    console.log('powerbtn pressed: '+powerBtn.id);
-    console.log('found element: '+btn.id+' click. found rack unit:');
+    console.log('found element: '+this.id+' click. found rack unit:');
     console.log(unit);
 
-    if (btn.value == "stop") {
+    if (this.value == "stop") {
       // unit.setVolume(0);
       unit.toggleOutput(false);
-      btn.value = "play";
+      this.value = "play";
     } else {
-      vol = document.getElementById(volKnob.id);
+      var vol = document.getElementById(volKnob.id);
       // unit.setVolume(vol.value);
       unit.toggleOutput(true);
-      btn.value = "stop";
+      this.value = "stop";
     }
   }
 
   waveShaper.onchange = function() {
     console.log("event: "+waveShaper.id);
-    wave = document.getElementById(waveShaper.id);
-    index = wave.id.slice(0, -4);
-    mod = racks[index];
+    var wave = document.getElementById(waveShaper.id);
+    var index = wave.id.slice(0, -4);
+    var mod = racks[index];
     mod.setWave(waveShaper.value);
   }
 
   volKnob.oninput = function() {
     console.log("event: "+volKnob.id);
-    vol = document.getElementById(volKnob.id);
-    index = vol.id.slice(0,-4);
-    mod = racks[index];
+    var vol = document.getElementById(volKnob.id);
+    var index = vol.id.slice(0,-4);
+    var mod = racks[index];
     mod.setVolume(vol.value);
   }
 
