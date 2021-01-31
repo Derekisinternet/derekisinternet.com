@@ -11,7 +11,7 @@ function init(){
   start.onclick = function() {
     context.resume();
     mod = oscillatorFactory(context, "osc-" + Object.keys(racks).length);
-    racks[mod.name] = mod;
+    
   }
   document.getElementById("patchPanel").appendChild(start);
 }
@@ -20,8 +20,9 @@ function init(){
 function oscillatorFactory(ctx, name) {
   // MODEL
   oscillator = new OscMod(ctx, name);
+  racks[oscillator.name] = oscillator; // add to global reference
   console.log('new OscMod');
-  console.log(oscillator);
+  console.log(racks);
   parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator, parentDiv);
@@ -65,21 +66,21 @@ function OscMod(ctx, name) {
 function initOscUI(osc, parentDiv) {
   var name = osc.name;
   // VIEW
-  powerBtn = document.createElement("input");
+  var powerBtn = document.createElement("input");
   powerBtn.id = name+'-pwr';
   powerBtn.type = "button";
   powerBtn.value = "play";
   
-  volKnob = document.createElement("input");
+  var volKnob = document.createElement("input");
   volKnob.id = name+'-vol';
   volKnob.type = "range";
   volKnob.min = "0.0";
   volKnob.max = '1.0';
   volKnob.step = '0.1';
   
-  waveShaper = document.createElement("select");
+  var waveShaper = document.createElement("select");
   waveShaper.id = name+'-wve';
-  w = ["sine","square","sawtooth","triangle"];
+  var w = ["sine","square","sawtooth","triangle"];
   w.forEach( item => {
     e = document.createElement("option");
     e.value = item;
@@ -90,9 +91,10 @@ function initOscUI(osc, parentDiv) {
 
   // CONTROLLERS
   powerBtn.onclick = function() {
-    btn = document.getElementById(powerBtn.id);
+    var btn = document.getElementById(powerBtn.id);
     index = btn.id.slice(0, -4);
     unit = racks[index];
+    console.log('powerbtn.id: '+powerBtn.id);
     console.log('button '+btn.id+' click. Unit returned:');
     console.log(unit);
 
@@ -109,6 +111,7 @@ function initOscUI(osc, parentDiv) {
   }
 
   waveShaper.onchange = function() {
+    console.log("event: "+waveShaper.id);
     wave = document.getElementById(waveShaper.id);
     index = wave.id.slice(0, -4);
     mod = racks[index];
@@ -116,6 +119,7 @@ function initOscUI(osc, parentDiv) {
   }
 
   volKnob.oninput = function() {
+    console.log("event: "+volKnob.id);
     vol = document.getElementById(volKnob.id);
     index = vol.id.slice(0,-4);
     mod = racks[index];
