@@ -4,7 +4,7 @@ function init(){
   racks = {}; // memory to hold units
   context = new window.AudioContext();
 
-
+  // init button to create modules
   start = document.createElement("input");
   start.type="button";
   start.value = "start";
@@ -13,7 +13,6 @@ function init(){
     mod = oscillatorFactory(context, "osc-" + Object.keys(racks).length);
     racks[mod.name] = mod;
   }
-
   document.getElementById("patchPanel").appendChild(start);
 }
 
@@ -34,6 +33,7 @@ function OscMod(ctx, name) {
   this.ctx = ctx;
   this.osc = ctx.createOscillator();
   this.gain = ctx.createGain();
+  this.gain.connect(ctx.destination);
   this.osc.connect(this.gain);
   this.osc.start();
 
