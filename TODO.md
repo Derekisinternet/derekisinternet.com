@@ -22,6 +22,9 @@
   - still a bit complicated. I think it has to do with creating references in memory in different init methods that get destroyed outside the context. I think I just need:
     - global hash with oscillator config
     - html elements that lookup elements in global hash
+  - I'm back to original functionality, but with objects instead of script. Observed behavior:
+    - all of the toggle buttons only affect the newest created button
+    - this problem only exists for the toggle. Other two elements are fine.
 
 
 - [ ] create patch mechanism

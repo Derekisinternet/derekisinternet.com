@@ -20,21 +20,21 @@ function init(){
 function oscillatorFactory(ctx, name) {
   // MODEL
   oscillator = new OscMod(ctx, name);
+  console.log('new OscMod');
   console.log(oscillator);
   parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
-  ui = new OscUI(oscillator, parentDiv, oscillator.name);
+  initOscUI(oscillator, parentDiv);
   return oscillator;
 }
 
 // takes an AudioContext and name
 function OscMod(ctx, name) {
   this.name = name;
-  this.ctx = ctx;
-  this.osc = ctx.createOscillator();
+  this.osc = context.createOscillator();
   this.gain = ctx.createGain();
-  this.gain.gain.setValueAtTime(0, this.ctx.currentTime);
-  this.gain.connect(ctx.destination);
+  // this.gain.gain.setValueAtTime(0, this.ctx.currentTime);
+  this.gain.gain.setValueAtTime(0, context.currentTime);
   this.osc.connect(this.gain);
   this.osc.start();
 
@@ -43,36 +43,42 @@ function OscMod(ctx, name) {
     gain = racks[this.name].gain.gain;
     console.log("gain:");
     console.log(gain);
-    gain.setValueAtTime(f, this.ctx.currentTime);
+    gain.setValueAtTime(f, context.currentTime);
   }
 
   this.setWave = function(type) {
     osc = racks[this.name].osc;
     osc.type = type;
   }
+
+  this.toggleOutput = function(bool) {
+    unit = racks[this.name];
+    if (bool == true) {
+      unit.gain.connect(context.destination);
+    } else {
+      unit.gain.disconnect(context.destination);
+    }
+  }
 }
 
 // takes an OscMod object, a div to live in, and a unique identifier
-function OscUI(osc, div, name) {
-  this.oscMod = osc;
-  this.name = name;
+function initOscUI(osc, parentDiv) {
+  var name = osc.name;
   // VIEW
-  this.parentDiv = div;
-
   powerBtn = document.createElement("input");
-  powerBtn.id = this.name+'-pwr';
+  powerBtn.id = name+'-pwr';
   powerBtn.type = "button";
   powerBtn.value = "play";
   
   volKnob = document.createElement("input");
-  volKnob.id = this.name+'-vol';
+  volKnob.id = name+'-vol';
   volKnob.type = "range";
   volKnob.min = "0.0";
   volKnob.max = '1.0';
   volKnob.step = '0.1';
   
   waveShaper = document.createElement("select");
-  waveShaper.id = this.name+'-wve';
+  waveShaper.id = name+'-wve';
   w = ["sine","square","sawtooth","triangle"];
   w.forEach( item => {
     e = document.createElement("option");
@@ -80,26 +86,25 @@ function OscUI(osc, div, name) {
     e.innerHTML = item;
     waveShaper.appendChild(e);
   });
-  // add to main view
-  parentDiv.appendChild(waveShaper);
-  parentDiv.appendChild(volKnob);
-  parentDiv.appendChild(powerBtn);
+  
 
-  // CONTROLLERs
+  // CONTROLLERS
   powerBtn.onclick = function() {
     btn = document.getElementById(powerBtn.id);
     index = btn.id.slice(0, -4);
     unit = racks[index];
-    console.log('button '+btn.id+' click');
+    console.log('button '+btn.id+' click. Unit returned:');
     console.log(unit);
 
     if (btn.value == "stop") {
-      unit.setVolume(0);
+      // unit.setVolume(0);
+      unit.toggleOutput(false);
       btn.value = "play";
     } else {
       vol = document.getElementById(volKnob.id);
-      unit.setVolume(vol.value);
-      powerBtn.value = "stop";
+      // unit.setVolume(vol.value);
+      unit.toggleOutput(true);
+      btn.value = "stop";
     }
   }
 
@@ -116,6 +121,11 @@ function OscUI(osc, div, name) {
     mod = racks[index];
     mod.setVolume(vol.value);
   }
+
+  // add views to main view
+  parentDiv.appendChild(waveShaper);
+  parentDiv.appendChild(volKnob);
+  parentDiv.appendChild(powerBtn);
 }
 
 // low-level helper that constructs a ui element
