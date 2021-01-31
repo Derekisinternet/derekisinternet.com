@@ -17,23 +17,26 @@ function init(){
 }
 
 // takes an audioContext and name, adds an oscillator to the ui
-function oscillatorFactory(ctx, name) {
+function oscillatorFactory(name) {
   // MODEL
-  oscillator = new OscMod(ctx, name);
+  oscillator = new OscMod(name);
   racks[oscillator.name] = oscillator; // add to global reference
   console.log('new OscMod');
   console.log(racks);
   parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator, parentDiv);
+  // set oscillator volume to volume slider value
+  vol = document.getElementById(oscillator.name+'-vol').value;
+  racks[name].setVolume(vol);
   return oscillator;
 }
 
 // takes an AudioContext and name
-function OscMod(ctx, name) {
+function OscMod(name) {
   this.name = name;
   this.osc = context.createOscillator();
-  this.gain = ctx.createGain();
+  this.gain = context.createGain();
   // this.gain.gain.setValueAtTime(0, this.ctx.currentTime);
   this.gain.gain.setValueAtTime(0, context.currentTime);
   this.osc.connect(this.gain);
@@ -41,6 +44,7 @@ function OscMod(ctx, name) {
 
   // volume num has to be 0.0 >= n >= 1.0
   this.setVolume = function(f) {
+    if (1.0 < f) {f= 1.0;}
     gain = racks[this.name].gain.gain;
     console.log("gain:");
     console.log(gain);
