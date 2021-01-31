@@ -33,6 +33,7 @@ function OscMod(ctx, name) {
   this.ctx = ctx;
   this.osc = ctx.createOscillator();
   this.gain = ctx.createGain();
+  this.gain.gain.setValueAtTime(0, this.ctx.currentTime);
   this.gain.connect(ctx.destination);
   this.osc.connect(this.gain);
   this.osc.start();
@@ -61,7 +62,7 @@ function OscUI(osc, div, name) {
   powerBtn = document.createElement("input");
   powerBtn.id = this.name+'-pwr';
   powerBtn.type = "button";
-  powerBtn.value = "on";
+  powerBtn.value = "play";
   
   volKnob = document.createElement("input");
   volKnob.id = this.name+'-vol';
@@ -92,13 +93,13 @@ function OscUI(osc, div, name) {
     console.log('button '+btn.id+' click');
     console.log(unit);
 
-    if (btn.value == "on") {
+    if (btn.value == "stop") {
       unit.setVolume(0);
-      btn.value = "off";
+      btn.value = "play";
     } else {
       vol = document.getElementById(volKnob.id);
       unit.setVolume(vol.value);
-      powerBtn.value = "on";
+      powerBtn.value = "stop";
     }
   }
 
