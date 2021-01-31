@@ -1,7 +1,15 @@
 var context, oscCount, racks;
 
 notes = {
-  A: {}
+  A: {},
+  As: {0: 29.14},
+  B: {0: 30.87},
+  C: {1: 32.7},
+  D:{},
+  E:{},
+  F:{},
+  G:{},
+  Gs: {},
 }
 
 function init(){
@@ -79,6 +87,7 @@ function initOscUI(name, parentDiv) {
   
   var volInput = document.createElement("input");
   volInput.id = name+'-vol';
+  volInput.classList.add('tooltip');
   volInput.type = "range";
   volInput.min = "0.0";
   volInput.max = '1.0';
@@ -96,10 +105,21 @@ function initOscUI(name, parentDiv) {
 
   var freqInput = document.createElement("input")
   freqInput.id = name+'-frq';
+  freqInput.classList.add('tooltip');
   freqInput.type = 'range';
-  freqInput.min = "10.0";
-  freqInput.max = "13512.0";
+  freqInput.min = 100.7;
+  freqInput.max = 1975.53;
   
+  var freqRange = document.createElement("select");
+  freqRange.id = name+'-frg';
+  var r = ['L', 'M', 'H'];
+  r.forEach( i => {
+    e = document.createElement("option");
+    e.value = i;
+    e.innerHTML = i;
+    freqRange.appendChild(e);
+  });
+  freqRange.children[1].selected = 'selected';
 
   // CONTROLLERS
   powerBtn.onclick = function() {
@@ -141,11 +161,41 @@ function initOscUI(name, parentDiv) {
     mod.setFreq(this.value);
   }
 
+  freqRange.onchange = function() {
+    console.log("event: "+freqRange.id);
+    var id = this.id.slice(0, -4);
+    var slider = document.getElementById(id+'-frq');
+    position = (slider.value - slider.min) / (slider.max - slider.val );
+    switch (this.value) {
+      case 'L':
+        slider.min = 50.0/60;
+        slider.max = 30.87;
+        break;
+      case 'H':
+        slider.min = 1046.50; // C6
+        slider.max = 13512.0;
+        break;
+      default: // M
+        slider.min = 100.7; // C1
+        slider.max = 1975.53; // B6
+        break;
+    }
+    //update slider and oscillator with new values
+    slider.value = slider.max * position;
+    console.log('frequency slider value: '+slider.value);
+    var mod = racks[id];
+    mod.setFreq(slider.value);
+  }
+
   // add views to main view
   parentDiv.appendChild(waveShaper);
   parentDiv.appendChild(volInput);
-  parentDiv.appendChild(freqInput);
   parentDiv.appendChild(powerBtn);
+  parentDiv.appendChild(freqInput);
+  parentDiv.appendChild(freqRange);
+
+  // set viz to get input value
+  setTooltip(freqInput.id);
 }
 
 // low-level helper that constructs a ui element
@@ -153,4 +203,24 @@ function moduleFactory(name) {
   var m = document.createElement("div");
   m.id = name;
   return m;
+}
+
+// low-level helper to set up stat displays
+// requires elemId's element to have class = 'tooltip'
+function setTooltip(elemId) {
+  console.log('setting tooltip for '+elemId);
+  var elem = document.getElementById(elemId);
+  var toolTip = document.createElement("span");
+  toolTip.id = elemId+'-spn';
+  toolTip.classList.add('tooltiptext');
+  elem.appendChild(toolTip);
+
+  elem.onmouseover = function() {
+    // console.log('mouseover '+this.id);
+    var msg = this.value;
+    var window = document.getElementById(this.id+'-spn');
+    window.innerHTML = msg;
+    window.style.visibility = 'visible'; 
+    window.style.opacity = 1;
+  }
 }

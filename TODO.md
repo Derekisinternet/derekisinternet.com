@@ -21,12 +21,33 @@
 - [x] BUG: volume knobs have same problem as toggle buttons did
 - [ ] create oscillator frequency interface
   - [x] create a frequency setter for oscMod
-  - [ ] create input element for note frequencies
+  - [x] create input element for note frequencies
+  - [X] add option to adjust frequency range (high, med, low)
+      - [x] dropdown with three options: H, M, L
+      - [X] range update automatically translates pitch position to new range
+
+
+  - [ ] some sort of hover event so you can tell what the Hz is
+    - called a tooltip
+    - [x] add a span as a child node to the slider
+    - [x] add some css to make it look cool (cribbed from w3schools)
+    - [ ] render it in js so that I can make the tooltip render dynamically
+
+
+- [ ] optimize oscillator css
+  - [ ] elements organized in a nice box
+  - [ ] good color scheme
 
 - [ ] create way to generate notes
+  - [ ] generates note frequenciess with math, rather than table lookup
 
+- [ ] create module that alters inputs
+  - envelope generator?
 
 
 - [ ] create patch mechanism
+  - api endpoint to set output destination
+  - api endpoint to modulate output
+  - visual component that draws a line from one out to another in
 
 - [ ] do some css
