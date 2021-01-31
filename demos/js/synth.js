@@ -1,5 +1,9 @@
 var context, oscCount, racks;
 
+notes = {
+  A: {}
+}
+
 function init(){
   racks = {}; // memory to hold units
   context = new window.AudioContext();
@@ -35,7 +39,6 @@ function OscMod(name) {
   this.name = name;
   this.osc = context.createOscillator();
   this.gain = context.createGain();
-  // this.gain.gain.setValueAtTime(0, this.ctx.currentTime);
   this.gain.gain.setValueAtTime(0, context.currentTime);
   this.osc.connect(this.gain);
   this.osc.start();
@@ -45,6 +48,10 @@ function OscMod(name) {
     if (1.0 < f) {f= 1.0;}
     gain = racks[this.name].gain.gain;
     gain.setValueAtTime(f, context.currentTime);
+  }
+
+  this.setFreq = function(numHz) {
+    this.osc.frequency.setValueAtTime(numHz, context.currentTime);
   }
 
   this.setWave = function(type) {
@@ -70,12 +77,12 @@ function initOscUI(name, parentDiv) {
   powerBtn.type = "button";
   powerBtn.value = "play";
   
-  var volKnob = document.createElement("input");
-  volKnob.id = name+'-vol';
-  volKnob.type = "range";
-  volKnob.min = "0.0";
-  volKnob.max = '1.0';
-  volKnob.step = '0.1';
+  var volInput = document.createElement("input");
+  volInput.id = name+'-vol';
+  volInput.type = "range";
+  volInput.min = "0.0";
+  volInput.max = '1.0';
+  volInput.step = '0.1';
   
   var waveShaper = document.createElement("select");
   waveShaper.id = name+'-wve';
@@ -86,6 +93,12 @@ function initOscUI(name, parentDiv) {
     e.innerHTML = item;
     waveShaper.appendChild(e);
   });
+
+  var freqInput = document.createElement("input")
+  freqInput.id = name+'-frq';
+  freqInput.type = 'range';
+  freqInput.min = "10.0";
+  freqInput.max = "13512.0";
   
 
   // CONTROLLERS
@@ -98,12 +111,10 @@ function initOscUI(name, parentDiv) {
     console.log(unit);
 
     if (this.value == "stop") {
-      // unit.setVolume(0);
       unit.toggleOutput(false);
       this.value = "play";
     } else {
-      var vol = document.getElementById(volKnob.id);
-      // unit.setVolume(vol.value);
+      var vol = document.getElementById(volInput.id);
       unit.toggleOutput(true);
       this.value = "stop";
     }
@@ -111,23 +122,29 @@ function initOscUI(name, parentDiv) {
 
   waveShaper.onchange = function() {
     console.log("event: "+waveShaper.id);
-    var wave = document.getElementById(waveShaper.id);
-    var index = wave.id.slice(0, -4);
+    var index = this.id.slice(0, -4);
     var mod = racks[index];
     mod.setWave(waveShaper.value);
   }
 
-  volKnob.oninput = function() {
-    console.log("event: "+volKnob.id);
-    var vol = document.getElementById(volKnob.id);
-    var index = vol.id.slice(0,-4);
+  volInput.oninput = function() {
+    console.log("event: "+volInput.id);
+    var index = this.id.slice(0,-4);
     var mod = racks[index];
-    mod.setVolume(vol.value);
+    mod.setVolume(this.value);
+  }
+
+  freqInput.oninput = function() {
+    console.log("event: "+this.id+", value: "+this.value);
+    var index = this.id.slice(0, -4);
+    var mod = racks[index];
+    mod.setFreq(this.value);
   }
 
   // add views to main view
   parentDiv.appendChild(waveShaper);
-  parentDiv.appendChild(volKnob);
+  parentDiv.appendChild(volInput);
+  parentDiv.appendChild(freqInput);
   parentDiv.appendChild(powerBtn);
 }
 

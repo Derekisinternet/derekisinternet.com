@@ -19,8 +19,11 @@
 - [x] BUG: creating multiple oscillators confuses each oscillator's toggle button
 - [x] BUG: oscillator gain not set until clicking volume input
 - [x] BUG: volume knobs have same problem as toggle buttons did
-- [ ] set oscillator frequency
-- f
+- [ ] create oscillator frequency interface
+  - [x] create a frequency setter for oscMod
+  - [ ] create input element for note frequencies
+
+- [ ] create way to generate notes
 
 
 
