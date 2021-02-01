@@ -19,13 +19,14 @@
 - [x] BUG: creating multiple oscillators confuses each oscillator's toggle button
 - [x] BUG: oscillator gain not set until clicking volume input
 - [x] BUG: volume knobs have same problem as toggle buttons did
-- [ ] create oscillator frequency interface
+- [x] create oscillator frequency interface
   - [x] create a frequency setter for oscMod
   - [x] create input element for note frequencies
   - [X] add option to adjust frequency range (high, med, low)
       - [x] dropdown with three options: H, M, L
       - [X] range update automatically translates pitch position to new range
-
+- [ ] create method of chaining modules
+  - [x] create setter methods for in an out in model
 
   - [ ] some sort of hover event so you can tell what the Hz is
     - called a tooltip

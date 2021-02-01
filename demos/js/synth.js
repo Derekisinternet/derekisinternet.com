@@ -212,14 +212,15 @@ function initOscUI(name, parentDiv) {
 // vca: voltage controlled amplifier/attenuator
 function attenuatorFactory(name) {
   var vca = new VcaMod(name);
+  console.log('created vca: '+vca.name);
+  console.log(vca);
   racks[vca.name] = vca; // add to global reference
   initVcaUI(name);
 }
 
 function VcaMod(name) {
-  this.name = name;
-  console.log('creating module: '+this.name);
-  this.vca = context.createGain();
+  ModuleModel.call(this, name);
+  this.node = context.createGain();
 
   // volume num has to be 0.0 >= n >= 1.0
   this.setVolume = function(f) {
@@ -227,30 +228,18 @@ function VcaMod(name) {
     console.log(this.name+' setting vol to '+f);
     var mod = racks[this.name];
     if (mod != null){
-      console.log(mod);
-      mod.vca.gain.setValueAtTime(f, context.currentTime);
+      mod.node.gain.setValueAtTime(f, context.currentTime);
     }
   }
 
   // this toggles whether or not output goes to main out
   this.toggleOutput = function(bool) {
-    var unit = racks[this.name].vca;
+    var node = racks[this.name].node;
     if (bool == true) {
-      unit.connect(context.destination);
+      node.connect(context.destination);
     } else {
-      unit.disconnect(context.destination);
+      node.disconnect(context.destination);
     }
-  }
-
-  // patch vca output to input of another node
-  // works on AudioNodes. Not sure how it'll work on the main context
-  this.patchTo = function(nodeName) {
-    node = racks[nodeName];
-    this.vca.connect(node);
-  }
-  // takes an audio node and connects its output to the vca gain
-  this.patchFrom = function(node) {
-    node.connect(this.vca.gain);
   }
 
 }
@@ -274,9 +263,12 @@ function initVcaUI(name) {
     console.log(this);
     var index = this.id.slice(0, -4);
     var unit = racks[index];
-  
-    console.log('found element: '+this.id+' click. found rack unit:');
-    console.log(unit);
+    if (unit != null) {
+      console.log('found element: '+index+' click. found rack unit:');
+      console.log(unit);
+    } else {
+      console.log('rack unit with name: '+unit+' not found');
+    }
 
     if (this.value == "stop") {
       unit.toggleOutput(false);
@@ -289,7 +281,7 @@ function initVcaUI(name) {
   }
 
   volInput.oninput = function() {
-    console.log("event: "+volInput.id);
+    console.log("event: "+this.id);
     var index = this.id.slice(0,-4);
     var mod = racks[index];
     mod.setVolume(this.value);
@@ -301,6 +293,23 @@ function initVcaUI(name) {
 
   var modRack = document.getElementById('patchPanel');
   modRack.appendChild(rackFrame);
+}
+
+// ModuleModel is an abstraction of a synth module
+function ModuleModel(name) {
+  this.name = name;
+  this.inputs = [];
+  this.outputs = [];
+  this.node; // the audioNode that powers the module
+  // patch module output to input of another node
+  this.patchTo = function(nodeName) {
+    var audioNode = racks[nodeName];
+    this.node.connect(audioNode);
+  }
+  // takes an audio node and connects its output to the vca gain
+  this.patchFrom = function(node) {
+    node.connect(this.vca.gain);
+  }
 }
 
 // low-level helper that constructs a ui element
