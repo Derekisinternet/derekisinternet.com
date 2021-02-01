@@ -1,6 +1,25 @@
+:root {
+  --ui-green: #428f42;
+  --dark-blue: #091d2b;
+  --dark-purple: #1d0a00;
+  --wood: #422200;
+}
+
 body{
   background: #2b1101;
   background: radial-gradient(circle, #091d2b, #1d0a00);
+}
+
+#patchPanel {
+  border: 5px solid var(--wood);
+}
+
+.oscillator {
+  background: #091d2b;
+  border: 5px solid var(--dark-blue);
+}
+.oscillator .range {
+
 }
 
 .tooltip {

@@ -1,17 +1,5 @@
 var context, oscCount, racks;
 
-notes = {
-  A: {},
-  As: {0: 29.14},
-  B: {0: 30.87},
-  C: {1: 32.7},
-  D:{},
-  E:{},
-  F:{},
-  G:{},
-  Gs: {},
-}
-
 function init(){
   racks = {}; // memory to hold units
   context = new window.AudioContext();
@@ -19,16 +7,16 @@ function init(){
   // init button to create modules
   start = document.createElement("input");
   start.type="button";
-  start.value = "add oscillator";
+  start.value = "add module";
   start.onclick = function() {
     context.resume();
     mod = oscillatorFactory("osc-" + Object.keys(racks).length);
     
   }
-  document.getElementById("patchPanel").appendChild(start);
+  document.getElementById("controlPanel").appendChild(start);
 }
 
-// takes an audioContext and name, adds an oscillator to the ui
+// creates a model, view, and controller for a VCO
 function oscillatorFactory(name) {
   // MODEL
   var oscillator = new OscMod(name);
@@ -42,7 +30,7 @@ function oscillatorFactory(name) {
   return oscillator;
 }
 
-// takes an AudioContext and name
+// a code-ified VCO
 function OscMod(name) {
   this.name = name;
   this.osc = context.createOscillator();
@@ -187,40 +175,52 @@ function initOscUI(name, parentDiv) {
     mod.setFreq(slider.value);
   }
 
-  // add views to main view
-  parentDiv.appendChild(waveShaper);
-  parentDiv.appendChild(volInput);
-  parentDiv.appendChild(powerBtn);
-  parentDiv.appendChild(freqInput);
-  parentDiv.appendChild(freqRange);
+  // create box to put the views in
+  modBox = document.createElement("div");
+  modBox.id = "frame-"+name;
+  modBox.classList.add("oscillator");
 
-  // set viz to get input value
-  setTooltip(freqInput.id);
+  // add views to main view
+  modBox.appendChild(freqRange);
+  modBox.appendChild(waveShaper);
+  modBox.appendChild(volInput);
+  modBox.appendChild(powerBtn);
+  modBox.appendChild(freqInput);
+
+  parentDiv.appendChild(modBox);
+
+  // set viz to display input value on hover event
+  // setTooltip(freqInput.id);
+}
+
+// creates a VCA model view and controller
+function attenuatorFactory(name) {
+
 }
 
 // low-level helper that constructs a ui element
-function moduleFactory(name) {
-  var m = document.createElement("div");
+function elemFactory(name, type) {
+  var m = document.createElement(type);
   m.id = name;
   return m;
 }
 
 // low-level helper to set up stat displays
 // requires elemId's element to have class = 'tooltip'
-function setTooltip(elemId) {
-  console.log('setting tooltip for '+elemId);
-  var elem = document.getElementById(elemId);
-  var toolTip = document.createElement("span");
-  toolTip.id = elemId+'-spn';
-  toolTip.classList.add('tooltiptext');
-  elem.appendChild(toolTip);
+// function setTooltip(elemId) {
+//   console.log('setting tooltip for '+elemId);
+//   var elem = document.getElementById(elemId);
+//   var toolTip = document.createElement("span");
+//   toolTip.id = elemId+'-spn';
+//   toolTip.classList.add('tooltiptext');
+//   elem.appendChild(toolTip);
 
-  elem.onmouseover = function() {
-    // console.log('mouseover '+this.id);
-    var msg = this.value;
-    var window = document.getElementById(this.id+'-spn');
-    window.innerHTML = msg;
-    window.style.visibility = 'visible'; 
-    window.style.opacity = 1;
-  }
-}
+//   elem.onmouseover = function() {
+//     // console.log('mouseover '+this.id);
+//     var msg = this.value;
+//     var window = document.getElementById(this.id+'-spn');
+//     window.innerHTML = msg;
+//     window.style.visibility = 'visible'; 
+//     window.style.opacity = 1;
+//   }
+// }

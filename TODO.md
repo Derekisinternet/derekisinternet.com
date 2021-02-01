@@ -35,7 +35,7 @@
 
 
 - [ ] optimize oscillator css
-  - [ ] elements organized in a nice box
+  - [ ] oscillator elements organized in a nice box
   - [ ] good color scheme
 
 - [ ] create way to generate notes
@@ -50,4 +50,3 @@
   - api endpoint to modulate output
   - visual component that draws a line from one out to another in
 
-- [ ] do some css
