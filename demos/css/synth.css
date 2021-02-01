@@ -14,8 +14,11 @@ body{
   border: 5px solid var(--wood);
 }
 
-.oscillator {
+.module {
   background: #091d2b;
+}
+
+.oscillator {
   border: 5px solid var(--dark-blue);
 }
 .oscillator .range {

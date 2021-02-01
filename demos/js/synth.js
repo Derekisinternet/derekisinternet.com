@@ -1,8 +1,9 @@
-var context, oscCount, racks;
+var context, racks;
 
 function init(){
   racks = {}; // memory to hold units
   context = new window.AudioContext();
+  initAudioUI();
 
   // init form to create modules
   var start = elemFactory('add-module', 'select');
@@ -32,6 +33,13 @@ function init(){
     
   }
   document.getElementById("controlPanel").appendChild(start);
+}
+
+// creates the main audio interface control board
+function initAudioUI() {
+  var parentNode = document.getElementById("audioPanel");
+  var panel = elemFactory('audio-panel', 'div');
+
 }
 
 // creates a model, view, and controller for a VCO
@@ -246,7 +254,8 @@ function VcaMod(name) {
 
 function initVcaUI(name) {
   // VIEW
-  var rackFrame= elemFactory(name+' ', 'div');
+  var rackPanel= elemFactory(name+' ', 'div');
+  rackPanel.classList.add('module');
   var pwrBtn = elemFactory(name+'-pwr', "input");
   pwrBtn.type = "button";
   pwrBtn.value = "play";
@@ -257,6 +266,9 @@ function initVcaUI(name) {
   volInput.min = "0.0";
   volInput.max = '1.0';
   volInput.step = '0.1';
+
+  var inputBox = createInputs(name, 1);
+  // var outputBox = createOutputs();
 
   // CONTROLLER
   pwrBtn.onclick = function() {
@@ -288,11 +300,13 @@ function initVcaUI(name) {
   }
 
   //ADD VIEWS TO WINDOW
-  rackFrame.appendChild(volInput);
-  rackFrame.appendChild(pwrBtn);
+  rackPanel.appendChild(inputBox);
+  rackPanel.appendChild(volInput);
+  rackPanel.appendChild(pwrBtn);
+  // rackPanel.appendChild(outputBox);
 
   var modRack = document.getElementById('patchPanel');
-  modRack.appendChild(rackFrame);
+  modRack.appendChild(rackPanel);
 }
 
 // ModuleModel is an abstraction of a synth module
@@ -312,9 +326,24 @@ function ModuleModel(name) {
   }
 }
 
+//
+// UI HELPER METHODS
+//
+
 // low-level helper that constructs a ui element
 function elemFactory(name, type) {
   var m = document.createElement(type);
   m.id = name;
   return m;
+}
+
+// returns a collection of html input objects
+function createInputs(name, num) {
+  var panel = elemFactory(name+'-inputs', 'div');
+  for (i = 0; i < num; i++) {
+    e = elemFactory(name+'-input-'+i, 'input');
+    e.type = 'radio';`1`
+    panel.appendChild(e);
+  }
+  return panel;
 }
