@@ -12,10 +12,14 @@
 - [ ] create method of chaining modules
   - [x] create setter methods for in an out in model
   - [x] create inputs in view
-  - [ ] create outputs in view
+  - [x] create outputs in view
+  - [ ] create button method that connects one module output to another module input
+    - [x] created global patch buffer. 
+    - [ ] create method that adds output to patch buffer
+    - [ ] create method that pops output out of buffer and connects it to module input
   - [ ] refactor oscillator MVC to decouple gain
 
-- [ ] BUG: selector to create modules doesn't allow you to make type that's currently selected
+- [x] BUG: selector to create modules doesn't allow you to make type that's currently selected
 
 
 - [ ] optimize oscillator css
