@@ -232,6 +232,16 @@ function VcaMod(name) {
     }
   }
 
+  // this toggles whether or not output goes to main out
+  this.toggleOutput = function(bool) {
+    var unit = racks[this.name].vca;
+    if (bool == true) {
+      unit.connect(context.destination);
+    } else {
+      unit.disconnect(context.destination);
+    }
+  }
+
   // patch vca output to input of another node
   // works on AudioNodes. Not sure how it'll work on the main context
   this.patchTo = function(nodeName) {
