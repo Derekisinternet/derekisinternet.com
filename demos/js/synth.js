@@ -4,13 +4,31 @@ function init(){
   racks = {}; // memory to hold units
   context = new window.AudioContext();
 
-  // init button to create modules
-  start = document.createElement("input");
-  start.type="button";
-  start.value = "add module";
-  start.onclick = function() {
+  // init form to create modules
+  var start = elemFactory('add-module', 'select');
+  var l = ['oscillator', 'amplifier'];
+  l.forEach(i => {
+    e = elemFactory(i, 'option');
+    e.value = i.slice(0, 3);
+    e.innerHTML = i;
+    start.appendChild(e);
+  })
+
+  start.onchange = function() {
     context.resume();
-    mod = oscillatorFactory("osc-" + Object.keys(racks).length);
+    console.log('selected new module: '+start.value);
+    switch (start.value) {
+      case 'osc':
+        oscillatorFactory('osc-' + Object.keys(racks).length);
+        break;
+      case 'amp':
+        attenuatorFactory('amp-'+Object.keys(racks).length);
+        break;
+      default:
+        console.log("unspecified value for module start");
+        break;
+    }
+    
     
   }
   document.getElementById("controlPanel").appendChild(start);
@@ -42,7 +60,7 @@ function OscMod(name) {
   // volume num has to be 0.0 >= n >= 1.0
   this.setVolume = function(f) {
     if (1.0 < f) {f= 1.0;}
-    gain = racks[this.name].gain.gain;
+    var gain = racks[this.name].gain.gain;
     gain.setValueAtTime(f, context.currentTime);
   }
 
@@ -51,12 +69,12 @@ function OscMod(name) {
   }
 
   this.setWave = function(type) {
-    osc = racks[this.name].osc;
+    var osc = racks[this.name].osc;
     osc.type = type;
   }
 
   this.toggleOutput = function(bool) {
-    unit = racks[this.name];
+    var unit = racks[this.name];
     if (bool == true) {
       unit.gain.connect(context.destination);
     } else {
@@ -68,6 +86,11 @@ function OscMod(name) {
 // takes an OscMod name to pair with, and a div to live in
 function initOscUI(name, parentDiv) {
   // VIEW
+  // create box to put the views in
+  modBox = document.createElement("div");
+  modBox.id = "frame-"+name;
+  modBox.classList.add("oscillator");
+
   var powerBtn = document.createElement("input");
   powerBtn.id = name+'-pwr';
   powerBtn.type = "button";
@@ -175,11 +198,6 @@ function initOscUI(name, parentDiv) {
     mod.setFreq(slider.value);
   }
 
-  // create box to put the views in
-  modBox = document.createElement("div");
-  modBox.id = "frame-"+name;
-  modBox.classList.add("oscillator");
-
   // add views to main view
   modBox.appendChild(freqRange);
   modBox.appendChild(waveShaper);
@@ -188,14 +206,91 @@ function initOscUI(name, parentDiv) {
   modBox.appendChild(freqInput);
 
   parentDiv.appendChild(modBox);
-
-  // set viz to display input value on hover event
-  // setTooltip(freqInput.id);
 }
 
 // creates a VCA model view and controller
+// vca: voltage controlled amplifier/attenuator
 function attenuatorFactory(name) {
+  var vca = new VcaMod(name);
+  racks[vca.name] = vca; // add to global reference
+  initVcaUI(name);
+}
 
+function VcaMod(name) {
+  this.name = name;
+  console.log('creating module: '+this.name);
+  this.vca = context.createGain();
+
+  // volume num has to be 0.0 >= n >= 1.0
+  this.setVolume = function(f) {
+    if (1.0 < f) {f= 1.0;}
+    console.log(this.name+' setting vol to '+f);
+    var mod = racks[this.name];
+    if (mod != null){
+      console.log(mod);
+      mod.vca.gain.setValueAtTime(f, context.currentTime);
+    }
+  }
+
+  // patch vca output to input of another node
+  // works on AudioNodes. Not sure how it'll work on the main context
+  this.patchTo = function(nodeName) {
+    node = racks[nodeName];
+    this.vca.connect(node);
+  }
+  // takes an audio node and connects its output to the vca gain
+  this.patchFrom = function(node) {
+    node.connect(this.vca.gain);
+  }
+
+}
+
+function initVcaUI(name) {
+  // VIEW
+  var rackFrame= elemFactory(name+' ', 'div');
+  var pwrBtn = elemFactory(name+'-pwr', "input");
+  pwrBtn.type = "button";
+  pwrBtn.value = "play";
+  
+  var volInput = elemFactory(name+'-vol',"input");
+  volInput.classList.add('tooltip');
+  volInput.type = "range";
+  volInput.min = "0.0";
+  volInput.max = '1.0';
+  volInput.step = '0.1';
+
+  // CONTROLLER
+  pwrBtn.onclick = function() {
+    console.log(this);
+    var index = this.id.slice(0, -4);
+    var unit = racks[index];
+  
+    console.log('found element: '+this.id+' click. found rack unit:');
+    console.log(unit);
+
+    if (this.value == "stop") {
+      unit.toggleOutput(false);
+      this.value = "play";
+    } else {
+      var vol = document.getElementById(volInput.id);
+      unit.toggleOutput(true);
+      this.value = "stop";
+    }
+  }
+
+  volInput.oninput = function() {
+    console.log("event: "+volInput.id);
+    var index = this.id.slice(0,-4);
+    var mod = racks[index];
+    mod.setVolume(this.value);
+  }
+
+  //ADD VIEWS TO WINDOW
+  rackFrame.appendChild(volInput);
+  rackFrame.appendChild(pwrBtn);
+
+  var modRack = document.getElementById('patchPanel');
+  modRack.appendChild(rackFrame);
 }
 
 // low-level helper that constructs a ui element
@@ -204,23 +299,3 @@ function elemFactory(name, type) {
   m.id = name;
   return m;
 }
-
-// low-level helper to set up stat displays
-// requires elemId's element to have class = 'tooltip'
-// function setTooltip(elemId) {
-//   console.log('setting tooltip for '+elemId);
-//   var elem = document.getElementById(elemId);
-//   var toolTip = document.createElement("span");
-//   toolTip.id = elemId+'-spn';
-//   toolTip.classList.add('tooltiptext');
-//   elem.appendChild(toolTip);
-
-//   elem.onmouseover = function() {
-//     // console.log('mouseover '+this.id);
-//     var msg = this.value;
-//     var window = document.getElementById(this.id+'-spn');
-//     window.innerHTML = msg;
-//     window.style.visibility = 'visible'; 
-//     window.style.opacity = 1;
-//   }
-// }
