@@ -7,6 +7,14 @@ function init(){
 
   // init form to create modules
   var start = elemFactory('add-module', 'select');
+  // create a default value for form
+  var defOpt = elemFactory('default', 'option');
+  defOpt.innerHTML = 'add a module';
+  defOpt.disabled = true;
+  defOpt.selected = true;
+  defOpt.style.display = 'none';
+  start.appendChild(defOpt);
+
   var l = ['oscillator', 'amplifier'];
   l.forEach(i => {
     e = elemFactory(i, 'option');
@@ -29,8 +37,7 @@ function init(){
         console.log("unspecified value for module start");
         break;
     }
-    
-    
+    this.selectedIndex = 0;
   }
   document.getElementById("controlPanel").appendChild(start);
 }
