@@ -53,31 +53,22 @@ function initAudioUI() {
 function oscillatorFactory(name) {
   // MODEL
   var oscillator = new OscMod(name);
+  console.log('created new oscillator: ');
+  console.log(oscillator);
   racks[oscillator.name] = oscillator; // add to global reference
   var parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator.name, parentDiv);
-  // set oscillator volume to volume slider value
-  var vol = document.getElementById(oscillator.name+'-vol').value;
-  racks[name].setVolume(vol);
+
   return oscillator;
 }
 
 // a code-ified VCO
 function OscMod(name) {
-  this.name = name;
+  // this.name = name;
+  ModuleModel.call(this, name);
   this.osc = context.createOscillator();
-  this.gain = context.createGain();
-  this.gain.gain.setValueAtTime(0, context.currentTime);
-  this.osc.connect(this.gain);
   this.osc.start();
-
-  // volume num has to be 0.0 >= n >= 1.0
-  this.setVolume = function(f) {
-    if (1.0 < f) {f= 1.0;}
-    var gain = racks[this.name].gain.gain;
-    gain.setValueAtTime(f, context.currentTime);
-  }
 
   this.setFreq = function(numHz) {
     this.osc.frequency.setValueAtTime(numHz, context.currentTime);
@@ -87,15 +78,6 @@ function OscMod(name) {
     var osc = racks[this.name].osc;
     osc.type = type;
   }
-
-  this.toggleOutput = function(bool) {
-    var unit = racks[this.name];
-    if (bool == true) {
-      unit.gain.connect(context.destination);
-    } else {
-      unit.gain.disconnect(context.destination);
-    }
-  }
 }
 
 // takes an OscMod name to pair with, and a div to live in
@@ -104,16 +86,6 @@ function initOscUI(name, parentDiv) {
   // create box to put the views in
   modBox = elemFactory(name, "div");
   modBox.classList.add("oscillator");
-
-  var powerBtn = elemFactory(name+'-pwr', 'button');
-  // powerBtn.type = "button";
-  powerBtn.innerHTML = "play";
-  
-  var volInput = elemFactory(name+'-vol', 'input');
-  volInput.type = "range";
-  volInput.min = "0.0";
-  volInput.max = '1.0';
-  volInput.step = '0.1';
   
   var waveShaper = elemFactory(name+'-wve', "select");
   var w = ["sine","square","sawtooth","triangle"];
@@ -142,37 +114,16 @@ function initOscUI(name, parentDiv) {
   });
   freqRange.children[1].selected = 'selected';
 
-  // CONTROLLERS
-  powerBtn.onclick = function() {
-    console.log(this);
-    var index = this.id.slice(0, -4);
-    var unit = racks[index];
-  
-    console.log('found element: '+this.id+' click. found rack unit:');
-    console.log(unit);
+  var sigIns = createInputs(name, ['freq']);
+  var sigOuts = createOutputs(name, ['main']);
 
-    if (this.value == "stop") {
-      unit.toggleOutput(false);
-      this.value = "play";
-    } else {
-      var vol = document.getElementById(volInput.id);
-      unit.toggleOutput(true);
-      this.value = "stop";
-    }
-  }
+  // CONTROLLERS
 
   waveShaper.onchange = function() {
     console.log("event: "+waveShaper.id);
     var index = this.id.slice(0, -4);
     var mod = racks[index];
     mod.setWave(waveShaper.value);
-  }
-
-  volInput.oninput = function() {
-    console.log("event: "+volInput.id);
-    var index = this.id.slice(0,-4);
-    var mod = racks[index];
-    mod.setVolume(this.value);
   }
 
   freqInput.oninput = function() {
@@ -211,9 +162,9 @@ function initOscUI(name, parentDiv) {
   // add views to main view
   modBox.appendChild(freqRange);
   modBox.appendChild(waveShaper);
-  modBox.appendChild(volInput);
-  modBox.appendChild(powerBtn);
   modBox.appendChild(freqInput);
+  modBox.appendChild(sigIns);
+  modBox.appendChild(sigOuts);
 
   parentDiv.appendChild(modBox);
 }
@@ -252,11 +203,15 @@ function VcaMod(name) {
     }
   }
 
+  // takes an audio node and connects its output to the vca gain
+  this.patchFrom = function(node) {
+    node.connect(this.vca.gain);
+  }
 }
 
 function initVcaUI(name) {
   // VIEW
-  var rackPanel= elemFactory(name+' ', 'div');
+  var rackPanel= elemFactory(name, 'div');
   rackPanel.classList.add('module');
   var pwrBtn = elemFactory(name+'-pwr', 'button');
   pwrBtn.innerHTML = "play";
@@ -269,8 +224,8 @@ function initVcaUI(name) {
   volInput.step = '0.01';
   volInput.value = '0.5';
 
-  var inputBox = createInputs(name, 1);
-  var outputBox = createOutputs(name, 1);
+  var sigIns = createInputs(name, ['main']); // these things come with their own controllers
+  var sigOuts = createOutputs(name, ['main']);
 
   // CONTROLLER
   pwrBtn.onclick = function() {
@@ -301,10 +256,10 @@ function initVcaUI(name) {
   }
 
   //ADD VIEWS TO WINDOW
-  rackPanel.appendChild(inputBox);
+  rackPanel.appendChild(sigIns);
   rackPanel.appendChild(volInput);
   rackPanel.appendChild(pwrBtn);
-  rackPanel.appendChild(outputBox);
+  rackPanel.appendChild(sigOuts);
 
   var modRack = document.getElementById('patchPanel');
   modRack.appendChild(rackPanel);
@@ -321,10 +276,7 @@ function ModuleModel(name) {
     var audioNode = racks[nodeName];
     this.node.connect(audioNode);
   }
-  // takes an audio node and connects its output to the vca gain
-  this.patchFrom = function(node) {
-    node.connect(this.vca.gain);
-  }
+  
 }
 
 //
@@ -338,43 +290,50 @@ function elemFactory(name, type) {
   return m;
 }
 
+// takes the name of the parent HTML elem, and a list of names
 // returns the panel node to place in a module 
-function createInputs(name, num) {
-  var panel = elemFactory(name+'-inputs', 'div');
-  for (i = 0; i < num; i++) {
-    e = elemFactory(name+'-input-'+i, 'input');
-    e.type = 'radio';
-    e.classList.add('in-jack');
-    e.onclick = function(){
-      // if there is something in the buffer, connect it and then clear buffer
-      if (patchBuf.length > 0) {
-        var modID = patchBuf.pop();
-        console.log('pulled id from buffer: '+modID);
-        console.log('new buffer length: '+patchBuf.length);
+function createInputs(parentName, inputs) {
+  var panel = elemFactory(parentName+'-inputs', 'div');
+  if (Array.isArray(inputs)) {
+    inputs.forEach ( i => {
+      e = elemFactory(parentName+'-input-'+i, 'input');
+      e.type = 'radio';
+      e.classList.add('in-jack');
+      e.onclick = function(){
+        console.log("event: "+this.id+' push');
+        // if there is something in the buffer, connect it and then clear buffer
+        if (patchBuf.length > 0) {
+          var modID = patchBuf.pop();
+          console.log('pulled id from buffer: '+modID);
+        }
+        var lookup = this.parentNode.parentNode.id;
+        console.log('input parent id: '+lookup);
       }
-      var lookup = this.parentNode.parentNode.id;
-      console.log('input parent id: '+lookup);
-    }
-    panel.appendChild(e);
+      panel.appendChild(e);
+    })
   }
   return panel;
 }
 
 // returns the parent node of the output objects
-function createOutputs(name, num) {
-  var panel = elemFactory(name+'-outputs', 'div');
-  for (i = 0; i < num; i++) {
-    e = elemFactory(name+'-input-'+i, 'input');
-    e.type = 'radio';
-    e.classList.add('out-jack');
-    e.onclick = function() {
-      // the synth module is the button's parent's parent
-      var mod = this.parentNode.parentNode;
-      // store a reference to the module in the buffer
-      patchBuf.push(mod.id);
-      console.log('pushed new ref to buffer: '+mod.id);
-    }
-    panel.appendChild(e);
+function createOutputs(parentName, outputs) {
+  var panel = elemFactory(parentName+'-outputs', 'div');
+  if (Array.isArray(outputs)) {
+    outputs.forEach( i => {
+      e = elemFactory(parentName+'-input-'+i, 'input');
+      e.type = 'radio';
+      e.classList.add('out-jack');
+      e.onclick = function() {
+        console.log("event: "+this.id+' push');
+        // the synth module is the button's parent's parent
+        var mod = this.parentNode.parentNode;
+        // store a reference to the module in the buffer
+        patchBuf.push(mod.id);
+        console.log('pushed new ref to buffer: '+mod.id);
+      }
+      panel.appendChild(e);
+    })
   }
+  
   return panel;
 }
