@@ -28,7 +28,7 @@ button {
 
 input[type=range] {
   background-color: transparent;
-  /* -webkit-appearance: none; */
+  /* -webkit-appearance: none; */ 
 }
 
 
@@ -55,8 +55,10 @@ input[type=range] {
 
 .in-jack {
   background-color:aqua;
+  border-radius: 50%;
 }
 
 .out-jack {
   background-color:coral;
+  border-radius: 50%;
 }

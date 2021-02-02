@@ -11,18 +11,7 @@
 
 ### Synth
 
-- [ ] create method of chaining modules
-  - [x] create setter methods for in an out in model
-  - [x] create inputs in view
-  - [x] create outputs in view
-  - [ ] create button method that connects one module output to another module input
-    - [x] create global patch buffer. 
-    - [x] create method that adds output id to patch buffer
-    - [ ] create method that pops output out of buffer and connects it to module input
-      - [ ] button method gets module's .node
-      - [ ] button calls node.patchTo or node.patchFrom
-
-  - [x] refactor oscillator MVC to decouple gain
+- [ ] BUG - connecting modules together fails with a console Error 
 
 - [ ] optimize oscillator css
   - [ ] oscillator elements organized in a nice box
@@ -35,9 +24,4 @@
   - envelope generator?
   - ASDR
 
-
-- [ ] create patch mechanism
-  - api endpoint to set output destination
-  - api endpoint to modulate output
-  - visual component that draws a line from one out to another in
 

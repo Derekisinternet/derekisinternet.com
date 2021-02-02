@@ -1,10 +1,12 @@
-var context, racks, patchBuf;
+var mainOut, racks, patchBuf;
 
 function init(){
   racks = {}; // memory to hold units
   patchBuf = []; // buffer for patching modules
-  context = new window.AudioContext();
-  initAudioUI();
+  mainOut = MainOutMod();
+  racks['main-audio'] = mainOut;
+  initMainOutUI();
+
 
   // init form to create modules
   var start = elemFactory('add-module', 'select');
@@ -43,10 +45,36 @@ function init(){
   document.getElementById("controlPanel").appendChild(start);
 }
 
+function MainOutMod() {
+  this.context = new window.AudioContext();
+  this.outGain = this.context.createGain();
+  this.outGain.connect(this.context.destination);
+
+  // volume num has to be 0.0 >= n >= 1.0
+  this.setVolume = function(f) {
+    if (1.0 < f) {f= 1.0;}
+    console.log(this.name+' setting vol to '+f);
+    this.gain.setValueAtTime(f, context.currentTime);
+  }
+}
+
 // creates the main audio interface control board
-function initAudioUI() {
+function initMainOutUI() {
   var parentNode = document.getElementById("audioPanel");
-  var panel = elemFactory('audio-panel', 'div');
+  var panel = elemFactory('main-audio', 'div');
+  var sigIns = createInputs(panel.id, ['01','02']);
+  
+  var mainVol = elemFactory('main-vol', 'input');
+  mainVol.type = 'range';
+  mainVol.step = '0.01';
+  mainVol.min = '0.0';
+  mainVol.max = '1.0';
+  mainVol.value = '0.5';
+  
+  panel.appendChild(mainVol);
+  panel.appendChild(sigIns);
+
+  parentNode.appendChild(panel);
 }
 
 // creates a model, view, and controller for a VCO
@@ -67,15 +95,15 @@ function oscillatorFactory(name) {
 function OscMod(name) {
   // this.name = name;
   ModuleModel.call(this, name);
-  this.osc = context.createOscillator();
-  this.osc.start();
+  this.node = context.createOscillator();
+  this.node.start();
 
   this.setFreq = function(numHz) {
-    this.osc.frequency.setValueAtTime(numHz, context.currentTime);
+    this.node.frequency.setValueAtTime(numHz, context.currentTime);
   }
 
   this.setWave = function(type) {
-    var osc = racks[this.name].osc;
+    var osc = racks[this.name].node;
     osc.type = type;
   }
 }
@@ -217,7 +245,6 @@ function initVcaUI(name) {
   pwrBtn.innerHTML = "play";
   
   var volInput = elemFactory(name+'-vol',"input");
-  volInput.classList.add('tooltip');
   volInput.type = "range";
   volInput.min = "0.0";
   volInput.max = '1.0';
@@ -274,6 +301,7 @@ function ModuleModel(name) {
   // patch module output to input of another node
   this.patchTo = function(nodeName) {
     var audioNode = racks[nodeName];
+    console.log('patching '+this.name+' to '+nodeName);
     this.node.connect(audioNode);
   }
   
@@ -296,18 +324,27 @@ function createInputs(parentName, inputs) {
   var panel = elemFactory(parentName+'-inputs', 'div');
   if (Array.isArray(inputs)) {
     inputs.forEach ( i => {
-      e = elemFactory(parentName+'-input-'+i, 'input');
-      e.type = 'radio';
+      e = elemFactory(parentName+'-input-'+i, 'button');
+      e.innerHTML = 'i';
       e.classList.add('in-jack');
+
       e.onclick = function(){
-        console.log("event: "+this.id+' push');
+        console.log("button event: "+this.id);
         // if there is something in the buffer, connect it and then clear buffer
         if (patchBuf.length > 0) {
           var modID = patchBuf.pop();
           console.log('pulled id from buffer: '+modID);
         }
+        var signal = racks[modID];
         var lookup = this.parentNode.parentNode.id;
         console.log('input parent id: '+lookup);
+        console.log(lookup);
+        // connect the modules
+        if (lookup instanceof AudioContext) {
+          signal.patchTo(lookup.destination);
+        } else {
+          signal.patchTo(lookup);
+        }
       }
       panel.appendChild(e);
     })
@@ -320,11 +357,12 @@ function createOutputs(parentName, outputs) {
   var panel = elemFactory(parentName+'-outputs', 'div');
   if (Array.isArray(outputs)) {
     outputs.forEach( i => {
-      e = elemFactory(parentName+'-input-'+i, 'input');
-      e.type = 'radio';
+      e = elemFactory(parentName+'-input-'+i, 'button');
+      e.innerHTML = 'o';
       e.classList.add('out-jack');
+
       e.onclick = function() {
-        console.log("event: "+this.id+' push');
+        console.log("button event: "+this.id);
         // the synth module is the button's parent's parent
         var mod = this.parentNode.parentNode;
         // store a reference to the module in the buffer
