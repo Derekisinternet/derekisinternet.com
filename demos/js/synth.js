@@ -24,7 +24,6 @@ function init(){
   })
 
   start.onchange = function() {
-    context.resume();
     console.log('selected new module: '+start.value);
     switch (start.value) {
       case 'osc':
@@ -47,21 +46,21 @@ function init(){
 
 function MainAudioFactory() {
   var name = 'main-audio';
-  var audioMod = MainAudioMod();
+  var audioMod = new MainAudioMod();
   racks[name] = audioMod;
   initMainOutUI(name);
 }
 
 function MainAudioMod() {
   this.context = new window.AudioContext();
-  this.outGain = this.context.createGain();
-  this.outGain.connect(this.context.destination);
+  this.node = this.context.createGain();
+  this.node.connect(this.context.destination);
 
   // volume num has to be 0.0 >= n >= 1.0
   this.setVolume = function(f) {
     if (1.0 < f) {f= 1.0;}
     console.log(this.name+' setting vol to '+f);
-    this.gain.setValueAtTime(f, context.currentTime);
+    this.node.setValueAtTime(f, context.currentTime);
   }
 }
 
@@ -101,11 +100,11 @@ function oscillatorFactory() {
 function OscMod(name) {
   // this.name = name;
   ModuleModel.call(this, name);
-  this.node = context.createOscillator();
+  this.node = racks['main-audio'].context.createOscillator();
   this.node.start();
 
   this.setFreq = function(numHz) {
-    this.node.frequency.setValueAtTime(numHz, context.currentTime);
+    this.node.frequency.setValueAtTime(numHz, racks['main-audio'].context.currentTime);
   }
 
   this.setWave = function(type) {
@@ -229,16 +228,6 @@ function VcaMod(name) {
     }
   }
 
-  // this toggles whether or not output goes to main out
-  this.toggleOutput = function(bool) {
-    var node = racks[this.name].node;
-    if (bool == true) {
-      node.connect(context.destination);
-    } else {
-      node.disconnect(context.destination);
-    }
-  }
-
   // takes an audio node and connects its output to the vca gain
   this.patchFrom = function(node) {
     node.connect(this.vca.gain);
@@ -347,18 +336,14 @@ function createInputs(parentName, inputs) {
         // if there is something in the buffer, connect it and then clear buffer
         if (patchBuf.length > 0) {
           var modID = patchBuf.pop();
-          console.log('pulled id from buffer: '+modID);
-        }
-        var signal = racks[modID];
-        var lookup = this.parentNode.parentNode.id;
-        console.log('input parent id: '+lookup);
-        var reciever = racks[lookup];
-        console.log(lookup);
-        // connect the modules
-        if (lookup instanceof AudioContext) {
-          signal.patchTo(reciever.destination);
-        } else {
-          signal.patchTo(reciever);
+          console.log('pulled signal id from buffer: '+modID);
+          var signal = racks[modID];
+          var lookup = this.parentNode.parentNode.id;
+          console.log('receiver parent id: '+lookup);
+          var reciever = racks[lookup];
+          console.log(reciever);
+          // connect the modules
+          signal.patchTo(reciever.node);
         }
       }
       panel.appendChild(e);
@@ -382,7 +367,7 @@ function createOutputs(parentName, outputs) {
         var mod = this.parentNode.parentNode;
         // store a reference to the module in the buffer
         patchBuf.push(mod.id);
-        console.log('pushed new ref to buffer: '+mod.id);
+        console.log('pushed new signal ref to buffer: '+mod.id);
       }
       panel.appendChild(e);
     })
