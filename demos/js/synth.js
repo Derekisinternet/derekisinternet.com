@@ -357,7 +357,7 @@ function createOutputs(parentName, outputs) {
   var panel = elemFactory(parentName+'-outputs', 'div');
   if (Array.isArray(outputs)) {
     outputs.forEach( i => {
-      e = elemFactory(parentName+'-input-'+i, 'button');
+      e = elemFactory(parentName+'-output-'+i, 'button');
       e.innerHTML = 'o';
       e.classList.add('out-jack');
 
