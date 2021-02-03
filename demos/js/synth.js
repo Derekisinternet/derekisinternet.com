@@ -3,10 +3,7 @@ var mainOut, racks, patchBuf;
 function init(){
   racks = {}; // memory to hold units
   patchBuf = []; // buffer for patching modules
-  mainOut = MainOutMod();
-  racks['main-audio'] = mainOut;
-  initMainOutUI();
-
+  MainAudioFactory();
 
   // init form to create modules
   var start = elemFactory('add-module', 'select');
@@ -31,10 +28,10 @@ function init(){
     console.log('selected new module: '+start.value);
     switch (start.value) {
       case 'osc':
-        oscillatorFactory('osc-' + Object.keys(racks).length);
+        oscillatorFactory();
         break;
       case 'amp':
-        attenuatorFactory('amp-'+Object.keys(racks).length);
+        attenuatorFactory();
         break;
       default:
         console.log("unspecified value for module start");
@@ -43,9 +40,19 @@ function init(){
     this.selectedIndex = 0;
   }
   document.getElementById("controlPanel").appendChild(start);
+
+  // add an oscillator
+  oscillatorFactory();
 }
 
-function MainOutMod() {
+function MainAudioFactory() {
+  var name = 'main-audio';
+  var audioMod = MainAudioMod();
+  racks[name] = audioMod;
+  initMainOutUI(name);
+}
+
+function MainAudioMod() {
   this.context = new window.AudioContext();
   this.outGain = this.context.createGain();
   this.outGain.connect(this.context.destination);
@@ -59,12 +66,12 @@ function MainOutMod() {
 }
 
 // creates the main audio interface control board
-function initMainOutUI() {
+function initMainOutUI(name) {
   var parentNode = document.getElementById("audioPanel");
-  var panel = elemFactory('main-audio', 'div');
+  var panel = elemFactory(name, 'div');
   var sigIns = createInputs(panel.id, ['01','02']);
   
-  var mainVol = elemFactory('main-vol', 'input');
+  var mainVol = elemFactory(name+'-vol', 'input');
   mainVol.type = 'range';
   mainVol.step = '0.01';
   mainVol.min = '0.0';
@@ -78,7 +85,8 @@ function initMainOutUI() {
 }
 
 // creates a model, view, and controller for a VCO
-function oscillatorFactory(name) {
+function oscillatorFactory() {
+  var name = 'osc-' + Object.keys(racks).length
   // MODEL
   var oscillator = new OscMod(name);
   console.log('created new oscillator: ');
@@ -87,8 +95,6 @@ function oscillatorFactory(name) {
   var parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator.name, parentDiv);
-
-  return oscillator;
 }
 
 // a code-ified VCO
@@ -199,7 +205,8 @@ function initOscUI(name, parentDiv) {
 
 // creates a VCA model view and controller
 // vca: voltage controlled amplifier/attenuator
-function attenuatorFactory(name) {
+function attenuatorFactory() {
+  var name = 'amp-'+Object.keys(racks).length;
   var vca = new VcaMod(name);
   console.log('created vca: '+vca.name);
   console.log(vca);
@@ -209,7 +216,8 @@ function attenuatorFactory(name) {
 
 function VcaMod(name) {
   ModuleModel.call(this, name);
-  this.node = context.createGain();
+  var context = racks['main-audio'].context;
+  this.setNode(context.createGain()); // create a 
 
   // volume num has to be 0.0 >= n >= 1.0
   this.setVolume = function(f) {
@@ -298,10 +306,15 @@ function ModuleModel(name) {
   this.inputs = [];
   this.outputs = [];
   this.node; // the audioNode that powers the module
+
+  //set the module's audioNode
+  this.setNode = function(node) {
+    this.node = node;
+  }
   // patch module output to input of another node
-  this.patchTo = function(nodeName) {
-    var audioNode = racks[nodeName];
-    console.log('patching '+this.name+' to '+nodeName);
+  this.patchTo = function(audioNode) {
+    console.log('patching '+this.name+' to:');
+    console.log(audioNode);
     this.node.connect(audioNode);
   }
   
@@ -328,6 +341,7 @@ function createInputs(parentName, inputs) {
       e.innerHTML = 'i';
       e.classList.add('in-jack');
 
+      // click function
       e.onclick = function(){
         console.log("button event: "+this.id);
         // if there is something in the buffer, connect it and then clear buffer
@@ -338,12 +352,13 @@ function createInputs(parentName, inputs) {
         var signal = racks[modID];
         var lookup = this.parentNode.parentNode.id;
         console.log('input parent id: '+lookup);
+        var reciever = racks[lookup];
         console.log(lookup);
         // connect the modules
         if (lookup instanceof AudioContext) {
-          signal.patchTo(lookup.destination);
+          signal.patchTo(reciever.destination);
         } else {
-          signal.patchTo(lookup);
+          signal.patchTo(reciever);
         }
       }
       panel.appendChild(e);
