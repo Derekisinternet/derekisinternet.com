@@ -105,6 +105,9 @@ function oscillatorFactory() {
   var parentDiv = document.getElementById('patchPanel');
   // VIEW/CONTROLLER
   initOscUI(oscillator.name, parentDiv);
+  // set oscillator default frequency to slider value
+  var freqVal = document.getElementById(name+'-frq').value;
+  oscillator.setFreq(freqVal);
 }
 
 // a code-ified VCO
@@ -129,7 +132,7 @@ function initOscUI(name, parentDiv) {
   // VIEW
   // create box to put the views in
   modBox = elemFactory(name, "div");
-  modBox.classList.add("oscillator");
+  modBox.classList.add("module");
   
   var waveShaper = elemFactory(name+'-wve', "select");
   var w = ["sine","square","sawtooth","triangle"];
@@ -146,6 +149,7 @@ function initOscUI(name, parentDiv) {
   freqInput.type = 'range';
   freqInput.min = 100.7;
   freqInput.max = 1975.53;
+  freqInput.value = 393.7;
   
   var freqRange = document.createElement("select");
   freqRange.id = name+'-frg';
@@ -181,7 +185,6 @@ function initOscUI(name, parentDiv) {
     console.log("event: "+freqRange.id);
     var id = this.id.slice(0, -4);
     var slider = document.getElementById(id+'-frq');
-    position = (slider.value - slider.min) / (slider.max - slider.val );
     switch (this.value) {
       case 'L':
         slider.min = 50.0/60;
@@ -197,6 +200,7 @@ function initOscUI(name, parentDiv) {
         break;
     }
     //update slider and oscillator with new values
+    var position = (slider.value - slider.min) / (slider.max - slider.val );
     slider.value = slider.max * position;
     console.log('frequency slider value: '+slider.value);
     var mod = racks[id];

@@ -12,7 +12,10 @@
 ### Synth
 
 - [x] BUG - connecting modules together fails with a console Error 
-- [ ] BUG - the main audio volume slider isn't hooked up properly
+- [x] BUG - the main audio volume slider isn't hooked up properly
+- [x] BUG - oscillator inits with value inconsistent with slider
+
+- [ ] create lines that show what inputs/outputs are connected
 
 - [ ] optimize oscillator css
   - [ ] oscillator elements organized in a nice box
@@ -24,5 +27,6 @@
 - [ ] create module that alters input wave
   - envelope generator?
   - ASDR
+
 
 
