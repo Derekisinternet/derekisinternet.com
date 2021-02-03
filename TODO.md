@@ -11,7 +11,8 @@
 
 ### Synth
 
-- [ ] BUG - connecting modules together fails with a console Error 
+- [x] BUG - connecting modules together fails with a console Error 
+- [ ] BUG - the main audio volume slider isn't hooked up properly
 
 - [ ] optimize oscillator css
   - [ ] oscillator elements organized in a nice box

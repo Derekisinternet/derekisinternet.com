@@ -63,8 +63,9 @@ function MainAudioMod(name) {
   this.setVolume = function(f) {
     if (1.0 < f) {f= 1.0;}
     console.log(this.name+' setting vol to '+f);
-    console.log(racks[this.name]);
-    this.node.setValueAtTime(f, this.context.currentTime);
+    var mod = racks[this.name]
+    console.log(mod);
+    mod.node.gain.setValueAtTime(f, mod.context.currentTime);
   }
 }
 
