@@ -1,6 +1,8 @@
 var mainOut, racks, patchBuf;
 
 function init(){
+  // disable the start button
+  document.getElementById('start-btn').style.display = 'none';
   racks = {}; // memory to hold units
   patchBuf = []; // buffer for patching modules
   MainAudioFactory();
@@ -46,12 +48,13 @@ function init(){
 
 function MainAudioFactory() {
   var name = 'main-audio';
-  var audioMod = new MainAudioMod();
+  var audioMod = new MainAudioMod(name);
   racks[name] = audioMod;
   initMainOutUI(name);
 }
 
-function MainAudioMod() {
+function MainAudioMod(name) {
+  this.name = name;
   this.context = new window.AudioContext();
   this.node = this.context.createGain();
   this.node.connect(this.context.destination);
@@ -60,23 +63,30 @@ function MainAudioMod() {
   this.setVolume = function(f) {
     if (1.0 < f) {f= 1.0;}
     console.log(this.name+' setting vol to '+f);
-    this.node.setValueAtTime(f, context.currentTime);
+    console.log(racks[this.name]);
+    this.node.setValueAtTime(f, this.context.currentTime);
   }
 }
 
 // creates the main audio interface control board
 function initMainOutUI(name) {
+  // VIEW
   var parentNode = document.getElementById("audioPanel");
   var panel = elemFactory(name, 'div');
   var sigIns = createInputs(panel.id, ['01','02']);
-  
   var mainVol = elemFactory(name+'-vol', 'input');
   mainVol.type = 'range';
   mainVol.step = '0.01';
   mainVol.min = '0.0';
   mainVol.max = '1.0';
   mainVol.value = '0.5';
-  
+  // CONTROLLER
+  mainVol.oninput = function() {
+    console.log("event: "+this.id);
+    var index = this.id.slice(0,-4);
+    var mod = racks[index];
+    mod.setVolume(this.value);
+  }
   panel.appendChild(mainVol);
   panel.appendChild(sigIns);
 
